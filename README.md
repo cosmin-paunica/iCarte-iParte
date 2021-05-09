@@ -1,4 +1,4 @@
-# iCarte-iParte-web
+# iCarte-iParte
 
 ## User stories
 - Ca dezvoltator, vreau să stochez date despre utilizatori si despre cărți.
