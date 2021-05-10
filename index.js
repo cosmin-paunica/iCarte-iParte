@@ -4,6 +4,7 @@ const cors = require('cors')
 const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
+require('dotenv').config()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(cors())
 
@@ -25,6 +26,7 @@ app.post('/api/login', urlencodedParser, async (req, res) => {		// will make a c
 })
 
 app.get('/api/book/:bookId', (req,res) => {
+	console.log(process.env.API_KEY)
 	res.json({"response":"API CALL RESPONSE FOR A CERTAIN BOOK ID"}) // will return a single book with the id of bookId
 })
 
