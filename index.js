@@ -4,8 +4,13 @@ const cors = require('cors')
 const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
-require('dotenv').config()
+const {google} = require('googleapis')
+const books = google.books({
+	version:'v1',
+	auth:process.env.API_KEY
+})
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+require('dotenv').config()
 app.use(cors())
 
 app.use(express.static(path.join(__dirname, 'client/build')))
@@ -25,14 +30,18 @@ app.post('/api/login', urlencodedParser, async (req, res) => {		// will make a c
 	res.json({"response":"OK"})
 })
 
-app.get('/api/book/:bookId', (req,res) => {
-	console.log(process.env.API_KEY)
-	res.json({"response":"API CALL RESPONSE FOR A CERTAIN BOOK ID"}) // will return a single book with the id of bookId
+app.get('/api/book/:bookId', async (req,res) => {
+	// will return a single book with the id of bookId
+	const data = await books.volumes.get({volumeId:req.params["bookId"]}) 
+	res.json(data) 
 })
 
-app.get('/api/books/:bookSearchString', (req,res) => {
-	res.json({"response":"API CALL RESPONSE FOR SEARCHING A BOOK"}) // will return a list of books that match bookSearchString
+app.get('/api/books/:bookSearchString', async (req,res) => {
+	// will return a list of books that match bookSearchString
 	// all the filtering paramteres (such as sorting by release date, or rating) will be found in req.params
+	const booksReturned = await books.volumes.list({q:req.params["bookSearchString"]})
+	const data = booksReturned.data.items.filter(book => book.volumeInfo.readingModes.image==true)
+	res.json(data)
 })
 
 app.get('/api/user/:userId', (req, res) => {
