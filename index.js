@@ -5,10 +5,13 @@ const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const {google} = require('googleapis')
+const {db} = require('./config/db.js')
+
 const books = google.books({
 	version:'v1',
 	auth:process.env.API_KEY
 })
+
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 require('dotenv').config()
 app.use(cors())
@@ -44,8 +47,10 @@ app.get('/api/books/:bookSearchString', async (req,res) => {
 	res.json(data)
 })
 
-app.get('/api/user/:userId', (req, res) => {
-	res.json({"response" :"API CALL RESPONSE FOR A CERTAIN USER ID"}) //will return a single user with the id of userId
+app.get('/api/user/:userId', async (req, res) => {
+	const data = await db.query("SELECT * FROM users");
+	res.json(data.rows)
+	// res.json({"response" :"API CALL RESPONSE FOR A CERTAIN USER ID"}) //will return a single user with the id of userId
 })
 
 app.get('/api/users/:userSearchString', (req, res) => {
