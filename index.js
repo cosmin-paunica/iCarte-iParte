@@ -21,7 +21,12 @@ app.post('/api/login', urlencodedParser, async (req, res) => {		// will make a c
 	//console.log(`username-ul este ${req.body.username}`)
 	//console.log(`parola este ${req.body.password}`)
 	req.session.username = req.body.username
-	res.json({"response":"OK"})
+	res.json({"response":"OK"})		// it should return "OK" if everything is alright and a corresponding error message otherwise
+})
+
+app.post('/api/signup', urlencodedParser, async (req, res) => {
+	
+	res.json({"response":"OK"})// it should return "OK" if everything is alright and a corresponding error message otherwise
 })
 
 app.get('/api/book/:bookId', (req,res) => {
