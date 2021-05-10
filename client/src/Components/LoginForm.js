@@ -29,6 +29,7 @@ const LoginForm = (props) => {
 		        
 		    <button type="submit" onClick = {handleClick}>Login</button>
 
+		    <a href ="#"> Click here to register </a>
 
 		</form>
 	)
