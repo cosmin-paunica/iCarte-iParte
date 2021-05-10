@@ -48,23 +48,30 @@ app.get('/api/books/:bookSearchString', async (req,res) => {
 })
 
 app.get('/api/user/:userId', async (req, res) => {
-	const data = await db.query("SELECT * FROM users");
+	//will return a single user with the id of userId
+	const data = await db.query(`SELECT * FROM users WHERE "ID_user" = $1`,[req.params["userId"]]);
 	res.json(data.rows)
-	// res.json({"response" :"API CALL RESPONSE FOR A CERTAIN USER ID"}) //will return a single user with the id of userId
 })
 
-app.get('/api/users/:userSearchString', (req, res) => {
-	res.json({"response": "API CALL RESPONSE FOR SEARCHING A USER"}) // will return a list of users that match userSearchString
+app.get('/api/users/:userSearchString', async (req, res) => {
+  // will return a list of users that match userSearchString
 	// all the filtering parametes (such as sorting alphabetically) will be found in req.params
+	const data = await db.query(`SELECT * FROM users WHERE "username" LIKE $1`,["%"+req.params["userSearchString"]+"%"]);
+	res.json(data.rows)
 })
 
 app.get('/api/group/:groupId', (req, res) => {
-	res.json({"response":"API CALL RESPONSE FOR A CERTAIN GROUP"}) // will return a single group with the id if groupId
+	 // will return a single group with the id if groupId
+	const data = await db.query(`SELECT * FROM groups WHERE "ID_group" = $1`,[req.params["groupId"]]);
+
+	res.json(data.rows[0])
 })
 
 app.get('/api/groups/:groupSearchString', (req, res) => {
-	res.json({"response":"API CALL FOR SEARCHING A GROUP"}) // will return a list of groups that match groupSearchString
+  // will return a list of groups that match groupSearchString
 	// all the filtering paramteres (such as sorting by number of members) will be found in req.params
+	const data = await db.query(`SELECT * FROM groups WHERE "name" LIKE $1`,["%"+req.params["groupSearchString"]+"%"]);
+	res.json(data.rows)
 })
 
 
