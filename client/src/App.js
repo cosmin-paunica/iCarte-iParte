@@ -7,11 +7,12 @@ function App() {
   const [user,setUser] = useState(null)
 
   const loginUser = (user) => {
+
+
     const response = fetch('/api/login', {
         "method":"POST",
         "headers": {
-          "Accept":"application/json, text/plain, */*",
-          "Content-Type":"application/json"
+          "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
         },
         "body":user
 

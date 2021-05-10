@@ -6,9 +6,8 @@ const LoginForm = (props) => {
 
 	const handleClick = (e) => {
 		e.preventDefault()
-		console.log(username,password)
-		props.login(JSON.stringify({"username":username,
-					"password":password}))
+		//console.log(username,password)
+		props.login(`username=${username}&password=${password}`)
 	}
 
 	const handleUsernameChange = (e) => {

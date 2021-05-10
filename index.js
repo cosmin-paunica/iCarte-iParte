@@ -3,7 +3,8 @@ const app = express()
 const cors = require('cors')
 const path = require('path')
 const session = require('express-session')
-
+const bodyParser = require('body-parser')
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(cors())
 
 app.use(express.static(path.join(__dirname, 'client/build')))
@@ -14,8 +15,12 @@ app.use(session({
 	saveUninitialized: false
 }));
 
-app.post('/api/login', async (req, res) => {
-	console.log(req.body)
+app.post('/api/login', urlencodedParser, async (req, res) => {		// will make a call to the database and create a session if the user entered corect credentials
+																// otherwise will return a message
+	//console.log(req.body)
+	//console.log(`username-ul este ${req.body.username}`)
+	//console.log(`parola este ${req.body.password}`)
+	req.session.username = req.body.username
 	res.json({"response":"OK"})
 })
 
