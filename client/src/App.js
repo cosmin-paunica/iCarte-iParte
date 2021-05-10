@@ -1,7 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 import LoginForm from './Components/LoginForm.js'
+import SignUpForm from './Components/SignUpForm.js'
 import React, {useEffect, useState} from 'react'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 function App() {
 
   const [user,setUser] = useState(null)
@@ -41,11 +43,12 @@ function App() {
 
   if(!user) {
     return(
-      <div className = "App">
-        <h1> iCarte-iParte </h1>
-        <h2 style={{color:"red"}}> {error} </h2>
-        <LoginForm login = {(user) => {loginUser(user)}}/>
-      </div>
+      <Router>
+        <div className = "App">
+          <Route path="/login" component = {LoginForm}/>
+          <Route path="/signup" component = {SignUpForm} />
+        </div>
+       </Router>
     )
   }
 
