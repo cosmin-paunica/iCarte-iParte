@@ -1,0 +1,26 @@
+{
+  "name": "icarte-iparte-web",
+  "version": "1.0.0",
+  "description": "- Ca dezvoltator, vreau să stochez date despre utilizatori si despre cărți.\r - Ca dezvoltator, vreau să am structura de bază implementată (conexiunea la baza de date, rute, etc.).\r - Ca utilizator, doresc să am o interfață grafică de bază.\r - Ca utilizator, vreau să pot căuta informații despre o carte după nume.\r - Ca utilizator, vreau să pot căuta un utilizator după nume.\r - Ca utilizator, vreau să pot marca unele cărți în una dintre următoarele categorii: citite, în curs de citire, de citit.\r - Ca utilizator, vreau să pot scrie recenzii cărților pe care le-am citit.\r - Ca utilizator, vreau să mă pot înscrie în grupuri pe care se discută despre anumite cărți.\r - Ca utilizator, doresc să pot raporta comentariile inadecvate ale unor utilizatori.\r - Ca dezvoltator, doresc să pot oferi aplicația spre a putea fi folosită de oricine are acces la internet.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && npm install && npm build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosmin-paunica/iCarte-iParte-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cosmin-paunica/iCarte-iParte-web/issues"
+  },
+  "homepage": "https://github.com/cosmin-paunica/iCarte-iParte-web#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1"
+  }
+}
