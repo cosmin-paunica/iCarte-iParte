@@ -1,0 +1,34 @@
+ul.navbar {
+	font-size: 17px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: lightblue;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+ul.navbar > li {
+  display:inline-block;
+  color:white;
+  padding:14px 16px;
+  transition:300ms linear;
+  cursor:pointer;
+}
+
+ul.navbar > li#myprofile {
+	float:right;
+}
+ul.navbar > input[type="text"] {
+  padding: 6px;
+  border: none;
+  margin-left:10px;
+  
+}
+
+ul.navbar > li:hover {
+	background-color:white;
+	color:lightblue;
+}

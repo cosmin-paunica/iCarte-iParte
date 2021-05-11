@@ -32,6 +32,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {		// will make a 
 	//console.log(req.body)
 	//console.log(`username-ul este ${req.body.username}`)
 	//console.log(`parola este ${req.body.password}`)
+
 	const username = req.body.username
 	const password = req.body.password
 	const userInDB = await db.query(`SELECT * FROM users WHERE "username" = $1`,[username]) 
