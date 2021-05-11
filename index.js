@@ -4,6 +4,7 @@ const cors = require('cors')
 const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
+const bcrypt = require('bcryptjs')
 const {google} = require('googleapis')
 const {db} = require('./config/db.js')
 
@@ -13,9 +14,11 @@ const books = google.books({
 })
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+const jsonParser = bodyParser.json()
+app.use(bodyParser.urlencoded({ extended: true }));
+
 require('dotenv').config()
 app.use(cors())
-
 app.use(express.static(path.join(__dirname, 'client/build')))
 
 app.use(session({
@@ -24,13 +27,23 @@ app.use(session({
 	saveUninitialized: false
 }));
 
-app.post('/api/login', urlencodedParser, async (req, res) => {		// will make a call to the database and create a session if the user entered corect credentials
+app.post('/api/login', bodyParser.json(), async (req, res) => {		// will make a call to the database and create a session if the user entered corect credentials
 																// otherwise will return a message
 	//console.log(req.body)
 	//console.log(`username-ul este ${req.body.username}`)
 	//console.log(`parola este ${req.body.password}`)
-	req.session.username = req.body.username
-	res.json({"response":"OK"})
+	const username = req.body.username
+	const password = req.body.password
+	const userInDB = await db.query(`SELECT * FROM users WHERE "username" = $1`,[username]) 
+	if(userInDB.rowCount && ((bcrypt.compareSync(password,userInDB.rows[0].password)))){
+			//the user provided good credentials
+			req.session.username = req.body.username
+			res.status(200).json({message:"User logged in"})
+	}
+	else{
+		res.status(401).json({message:"Wrong username or password"});
+	}
+	
 })
 
 app.get('/api/book/:bookId', async (req,res) => {
@@ -60,20 +73,34 @@ app.get('/api/users/:userSearchString', async (req, res) => {
 	res.json(data.rows)
 })
 
-app.get('/api/group/:groupId', (req, res) => {
+app.get('/api/group/:groupId', async (req, res) => {
 	 // will return a single group with the id if groupId
 	const data = await db.query(`SELECT * FROM groups WHERE "ID_group" = $1`,[req.params["groupId"]]);
 
 	res.json(data.rows[0])
 })
 
-app.get('/api/groups/:groupSearchString', (req, res) => {
+app.get('/api/groups/:groupSearchString', async (req, res) => {
   // will return a list of groups that match groupSearchString
 	// all the filtering paramteres (such as sorting by number of members) will be found in req.params
 	const data = await db.query(`SELECT * FROM groups WHERE "name" LIKE $1`,["%"+req.params["groupSearchString"]+"%"]);
 	res.json(data.rows)
 })
 
+app.post("/api/user",bodyParser.json(),(req,res)=>{
+	const salt= bcrypt.genSaltSync(10)
+	const username = req.body.username;
+	const password = bcrypt.hashSync(req.body.password,salt)
+	const email = req.body.email;
+	db.query(`INSERT INTO public.users(username, email, password)
+		VALUES ($1,$2,$3);`,[username,email,password]).then((queryResult)=>{
+			res.status(200).json({message:"User added in DB"})
+		}).catch(e =>{
+			console.error(e.stack)
+			res.status(500).json({message:"Error inserting into DB"})
+		})
+	
+})
 
 
 app.get('/*',(req,res)=>{
