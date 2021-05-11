@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import NavBar from './Components/NavBar.js'
 import LoginForm from './Components/LoginForm.js'
 import SignUpForm from './Components/SignUpForm.js'
 import React, {useEffect, useState} from 'react'
@@ -17,10 +18,10 @@ function App() {
       sessionStorage.user ? setUser(sessionStorage.user) : setUser(null)
   }, [])
 
-  if(!user) {
+ if(!user) {
     return(
       <Router>
-        <div className = "App">
+        <div className = "App app-background">
           <Route path="/" exact render = {() => (<LoginForm login = {loginUser} />)}/>
           <Route path="/signup" render = {() =>(<SignUpForm login = {loginUser}/>)}/>
         </div>
@@ -30,6 +31,7 @@ function App() {
 
   return (
     <div className="App">
+      <NavBar user = {user} />
       Logged in as {user}
     </div>
   );

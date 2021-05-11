@@ -3,8 +3,12 @@
   justify-content: center;
   align-items: center;
   height:100vh;
-  background-image:url('./book_background.jpg');
+
+  flex-direction:column;
+}
+
+.app-background {
+    background-image:url('./book_background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  flex-direction:column;
 }
