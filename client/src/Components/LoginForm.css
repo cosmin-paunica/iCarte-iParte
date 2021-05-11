@@ -1,0 +1,11 @@
+.loginForm > input {
+	display:block;
+	margin:10px 0px 20px 0px;
+	width:400px;
+}
+
+.loginForm {
+	border:1px solid black;
+	padding:20px;
+
+}
