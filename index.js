@@ -6,7 +6,7 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 const bcrypt = require('bcryptjs')
 const {google} = require('googleapis')
-const {db} = require('./config/db.js')
+const {db} = {} //require('./config/db.js')
 
 const books = google.books({
 	version:'v1',

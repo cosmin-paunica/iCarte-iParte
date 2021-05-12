@@ -1,11 +1,100 @@
+a {
+	text-decoration: none;
+}
+
+a:active, a:hover {
+	outline-width: 0;
+}
+
+:focus {
+	outline: none;
+}
+
 .loginForm > input {
-	display:block;
-	margin:10px 0px 20px 0px;
-	width:400px;
+	display: block;
+	margin-top: 5%;
+	margin-bottom: 10%;
+	width: 100%;
 }
 
 .loginForm {
-	border:1px solid black;
-	padding:20px;
+	padding: 1.45%;
+	background: #2d2f36e0;
+	box-shadow: 0px 0px 40px 16px rgb(0 0 0 / 22%);
+	width: 35%;
+}
 
+
+label {
+	color: #c2c2c5;
+	margin-top: 5%;
+	margin-bottom: 1%;
+}
+
+input {
+	background: transparent;
+	border: 0;
+	color: #f2f2f2;
+	outline: none;
+	font-size: 1.15rem;
+}
+
+#submit {
+	margin-top: 10%;
+	transition: color 300ms;
+	font-size: 1.75em;
+	background-color: #3a57af3d;
+	border-radius: 6%;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 0;
+	border: 2px solid #4f64a9;
+}
+
+#submit:hover {
+	background-color: #3a57af;
+	cursor: pointer;
+}
+
+
+a.button {
+	margin: 1% 1% 1% 1%;
+	background-color: #3a57af;
+	padding: 1.75%;
+	color: white;
+	display: block;
+	width: fit-content;
+	border-radius: 10%;
+	box-shadow: 0 0.19rem rgb(84 115 208 / 75%);
+	position: relative;
+	transition: all 0.1s linear 0s;
+}
+
+a.button:hover {
+	top: 0.75%;
+	background-color: #2e458b;
+	box-shadow: none;
+}
+
+@media screen and (min-width: 1250px) {
+	.loginForm{
+		width: 20%;
+	}
+}
+
+@media screen and (max-width: 1250px) {
+	.loginForm{
+		width: 30%;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.loginForm{
+		width: 50%;
+	}
+
+	body{
+		font-size: 10px;
+	}
 }
