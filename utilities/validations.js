@@ -32,7 +32,7 @@ const checkSignUpInput = (username, email, password, confirmPassword) => {
         return result
     }
 
-    const allowedChars = "0123456789abcdefghijklmnopqrstuvwxyz#_@!"
+    const allowedChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ*%&#_@!."
     const allowedCharsSet = new Set(allowedChars.split(""))
 
     let allowedCharsFlag = "OK"
@@ -50,20 +50,30 @@ const checkSignUpInput = (username, email, password, confirmPassword) => {
     chars = email.split("")
     chars.every(c => {
         if(!allowedCharsSet.has(c)){
-            allowedCharsFlag = `Unallowed character ${c} in email`
+            allowedCharsFlag = `Unallowed character ${c} in username`
             return false
         }
         return true
     })
-    
+
     chars = password.split("")
     chars.every(c => {
-        if(!allowedCharsSet.has(c)) {
-            allowedCharsFlag = `Unallowed character ${c} in password`
+        if(!allowedCharsSet.has(c)){
+            allowedCharsFlag = `Unallowed character ${c} in username`
             return false
         }
         return true
     })
+
+    chars = password.split("")
+    chars.every(c => {
+        if(!allowedCharsSet.has(c)){
+            allowedCharsFlag = `Unallowed character ${c} in username`
+            return false
+        }
+        return true
+    })
+
 
     if (allowedCharsFlag != "OK"){
         result.message = allowedCharsFlag
@@ -79,11 +89,12 @@ const checkSignUpInput = (username, email, password, confirmPassword) => {
     }
 
 
-    const minLength = /?=.{8,}/
-    const hasUppercaseLetter = /?=.*[A-Z]/
-    const hasLowercaseLetter = /?=.*[a-z]/
-    const hasDigit = /?=.*[0-9]/
-    const hasSpecialChar = /[^A-Za-z0-9]/
+    const minLength = new RegExp('(?=.{8,})')
+    const hasUppercaseLetter = new RegExp('(?=.*[A-Z])')
+    const hasLowercaseLetter = new RegExp('(?=.*[a-z])')
+    const hasDigit = new RegExp('(?=.*[0-9])')
+    const hasSpecialChar = new RegExp('([^A-Za-z0-9])')
+
     const strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
     const mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
 
@@ -121,3 +132,5 @@ const checkSignUpInput = (username, email, password, confirmPassword) => {
     return result
 
 }
+
+module.exports.checkSignUpInput = checkSignUpInput
