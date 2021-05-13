@@ -17,6 +17,14 @@ a:active, a:hover {
 	width: 100%;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	transition: background-color 5000s ease-in-out 0s;
+	-webkit-text-fill-color: white !important;
+}
+
 .loginForm {
 	padding: 1.45%;
 	background: #2d2f36e0;
@@ -43,18 +51,22 @@ input {
 	margin-top: 10%;
 	transition: color 300ms;
 	font-size: 1.75em;
-	background-color: #3a57af3d;
-	border-radius: 6%;
-	width: 50%;
+	background-color: #3a57af;
+	color: white;
+	border-radius: 7%;
+	box-shadow: 0 0.19rem rgb(84 115 208 / 75%);
+	position: relative;
+	width: 43%;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 0;
-	border: 2px solid #4f64a9;
 }
 
 #submit:hover {
-	background-color: #3a57af;
+	top: 0.75%;
+	background-color: #2e458b;
 	cursor: pointer;
+	box-shadow: none;
 }
 
 
