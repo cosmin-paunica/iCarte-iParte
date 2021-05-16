@@ -57,6 +57,7 @@ app.get('/api/book/:bookId', async (req,res) => {
 })
 
 app.get('/api/books/:bookSearchString', async (req,res) => {
+	console.log(req.params["bookSearchString"])
 	// will return a list of books that match bookSearchString
 	// all the filtering paramteres (such as sorting by release date, or rating) will be found in req.params
 	const booksReturned = await books.volumes.list({q:req.params["bookSearchString"]})
