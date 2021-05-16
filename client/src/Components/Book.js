@@ -8,7 +8,7 @@ const Book = (props) => {
 
 	useEffect(()=>{
 		// will make call to API but we will hardcode this for now
-		fetch(`/api/books/${id}`, {
+		fetch(`/api/book/${id}`, {
 			 "method":"GET",
 			 "headers": {
 			              "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
@@ -17,7 +17,7 @@ const Book = (props) => {
 			        }).then(response => {return response.json()})
 					.then(response => {
 						
-						setBook(response[0])
+						setBook(response)
 					})
 		
 	},[])
@@ -27,10 +27,10 @@ const Book = (props) => {
 		return(
 
 			<div className = "book">
-				<h1> {book.volumeInfo.title} </h1>
-				{book.volumeInfo.authors.map(x => (<h2>{x}</h2>))}
-				<img src = {book.volumeInfo.imageLinks.smallThumbnail} className = "bookImg"/>
-				<p>{book.volumeInfo.publishedDate} </p>
+				<h1> {book.data.volumeInfo.title} </h1>
+				{book.data.volumeInfo.authors.map(x => (<h2>{x}</h2>))}
+				<img src = {book.data.volumeInfo.imageLinks.smallThumbnail} className = "bookImg"/>
+				<p>{book.data.volumeInfo.publishedDate} </p>
 			</div>
 		)
 	}
