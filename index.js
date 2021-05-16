@@ -242,7 +242,117 @@ app.post("/api/user",bodyParser.json(), async (req,res)=>{
 	
 	
 })
+/**
+ * Returnsa ll the reviews for every book in Database
+ */
+app.get("/api/reviews",async(req,res)=>{
+	const data = await db.query("SELECT * FROM reviews");
+	res.status(200).json(data.rows);
+})
 
+/**
+ * Returns a singe review
+ */
+app.get("/api/reviews/:reviewID",async(req,res)=>{
+	const data = await db.query(`SELECT * FROM reviews WHERE "ID_review" = $1`,[req.params["reviewID"]]);
+	res.status(200).json(data.rows);
+})
+
+/**
+ * Returns tha reviews for a single book
+ */
+app.get("/api/reviews/book/:bookID",async(req,res)=>{
+	const data = await db.query(`SELECT * FROM reviews WHERE "ID_carte" = $1`,[req.params["bookID"]]);
+	res.status(200).json(data.rows);
+})
+
+/**
+ * Returns reviews made by a specific user
+ */
+ app.get("/api/reviews/user/:userID",async(req,res)=>{
+	const data = await db.query(`SELECT * FROM reviews WHERE "ID_user" = $1`,[req.params["userID"]]);
+	res.status(200).json(data.rows);
+})
+
+/**
+ * Adds a review to the Database using the logged in user
+ */
+app.post("/api/reviews",jsonParser,async(req,res)=>{
+	const bookID = req.body.ID_carte;
+	const comment = req.body.comment;
+	const rating = req.body.rating;
+	// const userID = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
+	// if(userID.rowCount == 0){
+	// 	 res.sendStatus(500)
+	// }
+	const userID = 1;
+	try{
+		const resQuery = db.query(`INSERT INTO reviews("ID_carte",comment,rating,"ID_user") VALUES ($1,$2,$3,$4)`,[bookID,comment,rating,userID])
+		res.status(200).json({message:"Review added"});
+	}catch(err){
+		console.log(err.stack);
+		res.sendStatus(500);
+	}
+	
+
+})
+
+/**
+ * Edits a review
+ */
+app.put("/api/reviews",jsonParser,async(req,res)=>{
+	const reviewID = req.body.ID_review;
+	const resQuery = await db.query(`SELECT * FROM reviews WHERE "ID_review" = $1`,[reviewID]);
+	if(resQuery.rowCount == 0){
+		return res.status(500).json({message:"No review with that ID"});
+	}
+	const updatedComment = req.body.comment;
+	const updatedRating = req.body.rating;
+	// const loggedUserID = await db.query(`SELECT * FROM users WHERE "username" = $1`,[req.session.username]);
+	// if(loggedUserID.rowCount ==0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedUserID= loggedUserID.rows[0].ID_user
+	// }
+	const loggedUserID = 1;
+	if(resQuery.rows[0].ID_user!= loggedUserID){
+		return res.status(500).json({message:"YOu dont have acces to modify this review"});
+	}
+	try{
+		const resQuery = await db.query(`UPDATE reviews SET comment = $1,rating = $2 WHERE "ID_review" = $3`,[updatedComment,updatedRating,reviewID]);
+		res.status(200).json({message:"Review updated"});
+	}catch(err){
+		console.log(err.stack);
+		res.sendStatus(500);
+	}
+})
+
+/**
+ * Deletes a specified review
+ */
+app.delete("/api/reviews/:reviewID",async(req,res)=>{
+	const data = await db.query(`SELECT * FROM reviews WHERE "ID_review" = $1`,[req.params["reviewID"]]);
+	if(data.rowCount == 0){
+		return res.status(500).json("No review with that ID in database");
+	}
+	// const loggedUserID = await db.query(`SELECT * FROM users WHERE "username" = $1`,[req.session.username]);
+	// if(loggedUserID.rowCount ==0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedUserID= loggedUserID.rows[0].ID_user
+	// }
+	const loggedUserID = 1;
+	if(data.rows[0].ID_user != loggedUserID){
+		return res.status(500).json({message:"You cant delete this review"});
+	}
+	try{
+		const resQuery = await db.query(`DELETE FROM REVIEWS WHERE "ID_review" = $1`,[req.params["reviewID"]]);
+		res.status(200).json({message:"Review deleted"});
+	}catch(err){
+		console.log(err.stack);
+		res.sendStatus(500);
+	}
+})
 
 app.get('/*', (req,res)=>{
 	res.sendFile(path.join(__dirname+'/client/build/index.html'))
