@@ -19,7 +19,7 @@ function App() {
       sessionStorage.user ? setUser(sessionStorage.user) : setUser(null)
   }, [])
 
- /*if(!user) {
+ if(!user) {
     return(
       <Router>
         <div className = "App app-background">
@@ -28,7 +28,7 @@ function App() {
         </div>
        </Router>
     )
-  }*/
+  }
 
   return (
     <div className="App">

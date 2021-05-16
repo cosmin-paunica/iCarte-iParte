@@ -20,7 +20,7 @@ const LoginForm = (props) => {
 
 	        }).then(response => response.json())
 	          .then(response => {
-	            if(response.response === "OK") {
+	            if(response.message === "User logged in") {
 	              props.login(username)
 	              
 	            }else {

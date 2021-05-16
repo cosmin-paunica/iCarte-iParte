@@ -97,22 +97,31 @@ app.post("/api/user",bodyParser.json(), async (req,res)=>{
 	const password = bcrypt.hashSync(req.body.password,salt)
 	const email = req.body.email;
 
-	const queryEmail = await db.query('SELECT COUNT(*) FROM users WHERE email = $1', [email])
+	let flag = true
+
+	const queryEmail = await db.query('SELECT * FROM users WHERE email = $1', [email])
 	if (queryEmail.rowCount != 0){
-		// email-ul este luat deja
+
+		flag = false
 	}
-	const queryUsername = await db.query('SELECT COUNT(*) FROM users WHERE username = $1', [username])
+	const queryUsername = await db.query('SELECT * FROM users WHERE username = $1', [username])
 	if (queryUsername.rowCount != 0){
-		// username-ul este luat deja
+
+		flag = false
 	}
 
-	db.query(`INSERT INTO public.users(username, email, password)
+	if(flag){
+		db.query(`INSERT INTO public.users(username, email, password)
 		VALUES ($1,$2,$3);`,[username,email,password]).then((queryResult)=>{
 			res.status(200).json({message:"User added in DB"})
 		}).catch(e =>{
 			console.error(e.stack)
 			res.status(500).json({message:"Error inserting into DB"})
 		})
+	}else {
+		res.status(500).json({message:"User already exists !"})
+	}
+	
 	
 })
 
