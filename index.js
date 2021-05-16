@@ -427,6 +427,111 @@ app.get("/api/getReadingList/",async(req,res)=>{
 	res.status(200).json(data.rows);
 })
 
+/**
+ * Current logged user follows another user
+ */
+app.post("/api/follow/:followID",async(req,res)=>{
+	const followID= req.params["followID"];
+	const loggedInUserID = 1;
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	const alreadyFollow = await db.query(`SELECT * FROM followage WHERE "ID_user" =$1 AND "ID_friend" = $2`,[loggedInUserID,followID])
+	if(alreadyFollow.rowCount != 0)
+	{
+		res.sendStatus(500);
+	}else{
+		try{
+			await db.query(`INSERT INTO followage VALUES ($1,$2,$3,$4)`,[loggedInUserID,followID,true,null]);
+			res.sendStatus(200);
+		}catch(err){
+			res.send(err.stack);
+		}
+	}
+})
+
+/**
+ * Current logged user accept a follow from specified user ID
+ */
+app.post("/api/accept/:followID",async(req,res)=>{
+	const followID= req.params["followID"];
+	const loggedInUserID = 3;
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	try{
+		const resQuery = await db.query(`UPDATE followage SET pending = $1 , "accept_date" = $2 WHERE "ID_user" = $3 AND "ID_friend" = $4`,[false,new Date(),followID,loggedInUserID]);
+		if(resQuery.rowCount == 0){
+			return res.status(500).json({message:"There is no invitation from that user"});
+		}else{
+			return res.status(200).json({message:"Follow request accepted"});
+		}
+	}catch(err)
+	{
+		console.log(err.stack);
+		res.status(500).json({message:"Something went wrong"});
+	}
+})
+
+/**
+ * Removes a follow connection between the current user and the spcified user;
+ */
+app.post("/api/unfollow/:userID",async(req,res)=>{
+	const followID= req.params["userID"];
+	const loggedInUserID = 1;
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	try{
+		const resQuery = await db.query(`DELETE FROM followage WHERE "ID_user" = $1 AND "ID_friend" = $2 `,[loggedInUserID,followID]);
+		// console.log(resQuery);
+		res.sendStatus(200);
+	}catch(err){
+		console.log(err.stack);
+		res.status(500).json({message:"Something went wrong"})
+	}
+})
+
+/**
+ * Returns a list of followers for the current logged in user
+ */
+app.get("/api/followers",async(req,res)=>{
+	const loggedInUserID = 3;
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	const data = await db.query(`SELECT f."ID_user",pending,accept_date,username,email FROM followage f JOIN users u ON f."ID_friend" = u."ID_user" WHERE f."ID_friend" = $1`,[loggedInUserID]);
+	res.status(200).json(data.rows);
+})
+
+/**
+ * Returns a list of all the people that follow the current logged in user
+ */
+app.get("/api/following",async(req,res)=>{
+	const loggedInUserID = 1;
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	const data = await db.query(`SELECT u."ID_user",pending,accept_date,username,email FROM followage f JOIN users u ON f."ID_friend" = u."ID_user" WHERE f."ID_user" = $1`,[loggedInUserID]);
+	res.status(200).json(data.rows);
+
+})
+
 app.get('/*', (req,res)=>{
 	res.sendFile(path.join(__dirname+'/client/build/index.html'))
 })
