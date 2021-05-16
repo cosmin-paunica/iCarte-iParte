@@ -55,9 +55,9 @@ const LoginForm = (props) => {
 		    <label htmlFor="password"><b>Password</b></label>
 		    <input type="password" placeholder="Enter Password" name="password" onChange ={handlePasswordChange} />
 		        
-		    <button type="submit" onClick = {handleClick}>Login</button>
+		    <input type="submit" value="Submit" id="submit" onClick = {handleClick}/>
 		    <br/>
-		    <Link to ='/signup'><a href ="#"> Click here to register </a></Link>
+		    <Link to ='/signup'><a href ="#" class="button"> Register </a></Link>
 
 		</form>
 	)
