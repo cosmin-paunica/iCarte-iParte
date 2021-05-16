@@ -1,0 +1,8 @@
+.book {
+	padding-top:50px;
+}
+
+.book > .bookImg {
+	width:100px;
+	height:200px;
+}
