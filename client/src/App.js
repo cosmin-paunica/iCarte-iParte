@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar user = {user} />
+      
       <Content user ={user}/>
       
     </div>
