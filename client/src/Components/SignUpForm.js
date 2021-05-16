@@ -120,10 +120,10 @@ const SignUpForm = (props) => {
 			<input type="password" placeholder="Enter Password" name="password" onChange = {handlePasswordChange}/>
 			<label htmlFor="password_confirm"><b>Confirm your password</b></label>
 			<input type="password" placeholder="Enter Password again" name="password_confirm" onChange = {handlePasswordConfirmChange}/>
-			<button type="submit" onClick = {handleClick}> Submit </button>
+			<input type="submit" value="Submit" id="submit" onClick = {handleClick} />
 			<br/>
 			<Link to='/'>
-				<a href="#"> Click here to login </a>
+				<a href="#" class="button"> Login </a>
 			</Link>
 		</form>
 	)
