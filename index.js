@@ -5,7 +5,7 @@ const path = require('path')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const bcrypt = require('bcryptjs')
-const {google} = require('googleapis')
+const {google, dlp_v2} = require('googleapis')
 const {db} = require('./config/db.js')
 const { info } = require('console')
 const {checkSignUpInput} = require('./utilities/validations')
@@ -352,6 +352,79 @@ app.delete("/api/reviews/:reviewID",async(req,res)=>{
 		console.log(err.stack);
 		res.sendStatus(500);
 	}
+})
+
+/**
+ * User marks a book as "started reading"
+ */
+app.post("/api/reading/:bookID",async (req,res)=>{
+	const bookID = req.params["bookID"];
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	const loggedInUserID = 1;
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	const isReadingAlready = await db.query(`SELECT * FROM books_read WHERE "ID_user" = $1 AND "ID_book" = $2`,[loggedInUserID,bookID]);
+	if(isReadingAlready.rowCount != 0){
+		return res.status(500).json({message:"Already reading this book"});
+	}
+	try{
+		const resQuery = await db.query(`INSERT INTO books_read VALUES($1,$2,$3,$4)`,[loggedInUserID,bookID,new Date(),null]);
+		res.sendStatus(200);
+	}catch(err){
+		console.log(err.stack);
+		res.sendStatus(500);
+	}
+})
+/**
+ * If it finds a book in process of reading it sets a finish date, else inserts a new book with a finish date set
+ */
+app.post("/api/finish/:bookID",async (req,res)=>{
+	const bookID = req.params["bookID"];
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	const loggedInUserID = 1;
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	const isReadingAlready = await db.query(`SELECT * FROM books_read WHERE "ID_user" = $1 AND "ID_book" = $2`,[loggedInUserID,bookID]);
+	if(isReadingAlready.rowCount == 0){
+		/* if a book is marked as finished but never started, insert a row with start date and end date matching since the user might already read the book  */
+		try{
+			const resQuery = await db.query(`INSERT INTO books_read VALUES($1,$2,$3,$4)`,[loggedInUserID,bookID,new Date(),new Date()]);
+			res.sendStatus(200);
+		}catch(err){
+			console.log(err.stack);
+			res.sendStatus(500);
+		}
+	}else{
+		try{
+			const resQuery = await db.query(`UPDATE books_read SET "finish_date" = $1 WHERE "ID_user" = $2 AND "ID_book" = $3`,[new Date(),loggedInUserID,bookID]);
+			res.sendStatus(200);
+		}catch(err){
+			console.log(err.stack);
+			res.sendStatus(500);
+		}
+	}
+	
+})
+/**
+ * REtrieves all tha books tracked for the current user
+ * ! This should be /api/user/readings but conflicts with the route above, should rename more sugestive
+ */
+app.get("/api/getReadingList/",async(req,res)=>{
+	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
+	const loggedInUserID = 1;
+	// if(loggedInUserID.rowCount == 0){
+	// 	res.sendStatus(500);
+	// }else{
+	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
+	// }
+	const data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[loggedInUserID]);
+	res.status(200).json(data.rows);
 })
 
 app.get('/*', (req,res)=>{
