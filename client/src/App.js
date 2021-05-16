@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import NavBar from './Components/NavBar.js'
+import Content from './Components/Content.js'
 import LoginForm from './Components/LoginForm.js'
 import SignUpForm from './Components/SignUpForm.js'
 import React, {useEffect, useState} from 'react'
@@ -18,7 +19,7 @@ function App() {
       sessionStorage.user ? setUser(sessionStorage.user) : setUser(null)
   }, [])
 
- if(!user) {
+ /*if(!user) {
     return(
       <Router>
         <div className = "App app-background">
@@ -27,12 +28,13 @@ function App() {
         </div>
        </Router>
     )
-  }
+  }*/
 
   return (
     <div className="App">
       <NavBar user = {user} />
-      Logged in as {user}
+      <Content user ={user}/>
+      
     </div>
   );
 }

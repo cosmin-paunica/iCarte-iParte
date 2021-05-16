@@ -16,7 +16,7 @@ const NavBar = (props) => {
 	}		
 
 	return(
-		<ul className="navbar">
+		<ul className="navbar" id ="navbar">
 			<li> iCarte-iParte </li>
 			<li id ="myprofile"> {props.user} </li>
 			<input type="text" placeholder="Search.." onChange = {handleChange}/>
