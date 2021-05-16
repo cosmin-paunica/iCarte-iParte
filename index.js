@@ -90,6 +90,79 @@ app.get('/api/groups/:groupSearchString', async (req, res) => {
 	const data = await db.query(`SELECT * FROM groups WHERE "name" LIKE $1`,["%"+req.params["groupSearchString"]+"%"]);
 	res.json(data.rows)
 })
+/**
+ * Returns a list of all the groups present in the database
+ */
+app.get('/api/groups',async(req,res)=>{
+	const data = await db.query(`SELECT * FROM "public"."groups"`);
+	res.json(data.rows);
+})
+/**
+ * Creates a group in the database with the data provided in body
+ */
+app.post('/api/groups',jsonParser,async(req,res)=>{
+	const groupName = req.body.name;
+	const groupDescription = req.body.description;
+	// const idAdmin = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
+	//TODO get id from req
+	const idAdmin = 1;
+	try{
+		const resQuery = await db.query(`INSERT INTO groups(name,description,"ID_Admin") VALUES ($1,$2,$3)`,[groupName,groupDescription,idAdmin]);
+		console.log(resQuery.rows);
+		res.status(200).json({message:"Added group into DB"})
+	}catch(err){
+		console.log(err.stack)
+		res.status(500).json({message:err.stack});
+	}
+})
+/**
+ * Recieves a group in body of the request and edits it in the database
+ */
+app.put('/api/groups',jsonParser,async(req,res)=>{
+	const groupID = req.body.ID_group;
+	const resQuery = await db.query(`SELECT * FROM groups WHERE "ID_group" = $1`,[groupID]);
+	if(resQuery.rowCount == 0){
+		return res.status(500).json({message:"Therese no group with that ID to be edited"});
+	}
+	const updatedName = req.body.name;
+	const updatedDescripton = req.body.description;
+	// if(resQuery.rows[0].ID_Admin != req.session.username){
+	//TODO get id fron req
+	if(resQuery.rows[0].ID_Admin != 1){
+		return res.status(500).json({message:"You don't have authority to modify this group"});
+	} 
+
+	try{
+		await db.query(`UPDATE groups SET name = $1, description = $2 WHERE "ID_group" = $3`,[updatedName,updatedDescripton,groupID]);
+		res.status(200).json({message:"Group updated"});
+	}catch(err){
+		console.log(err.stack);
+		res.status(500);
+	}
+})
+
+/**
+ * Deletes a group with ID specified in url
+ */
+app.delete('/api/groups/:groupID',async(req,res)=>{
+	const data = await db.query(`SELECT * FROM groups WHERE "ID_group" = $1`,[req.params["groupID"]]);
+	if(data.rowCount == 0){
+		return res.status(500).json("No group with that ID in database");
+	}
+	// const idUser = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
+	const idUser =1;
+	if(data.rows[0].ID_Admin != idUser){
+		return res.status(500).json({message:"You cant delete this group"});
+	}
+	try{
+		const resQuery = await db.query(`DELETE FROM groups WHERE "ID_group" = $1`,[req.params["groupID"]]);
+		res.sendStatus(200); 
+	}catch(err){
+		res.sendStatus(500);
+		console.log(err.stack);
+	}
+})
+
 
 app.post("/api/user",bodyParser.json(), async (req,res)=>{
 	const salt= bcrypt.genSaltSync(10)
