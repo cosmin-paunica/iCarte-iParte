@@ -6,7 +6,10 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 const bcrypt = require('bcryptjs')
 const {google} = require('googleapis')
-const {db} = {} //require('./config/db.js')
+const {db} = require('./config/db.js')
+const { info } = require('console')
+const {checkSignUpInput} = require('./utilities/validations')
+
 
 const books = google.books({
 	version:'v1',
@@ -88,11 +91,21 @@ app.get('/api/groups/:groupSearchString', async (req, res) => {
 	res.json(data.rows)
 })
 
-app.post("/api/user",bodyParser.json(),(req,res)=>{
+app.post("/api/user",bodyParser.json(), async (req,res)=>{
 	const salt= bcrypt.genSaltSync(10)
 	const username = req.body.username;
 	const password = bcrypt.hashSync(req.body.password,salt)
 	const email = req.body.email;
+
+	const queryEmail = await db.query('SELECT COUNT(*) FROM users WHERE email = $1', [email])
+	if (queryEmail.rowCount != 0){
+		// email-ul este luat deja
+	}
+	const queryUsername = await db.query('SELECT COUNT(*) FROM users WHERE username = $1', [username])
+	if (queryUsername.rowCount != 0){
+		// username-ul este luat deja
+	}
+
 	db.query(`INSERT INTO public.users(username, email, password)
 		VALUES ($1,$2,$3);`,[username,email,password]).then((queryResult)=>{
 			res.status(200).json({message:"User added in DB"})
@@ -104,7 +117,7 @@ app.post("/api/user",bodyParser.json(),(req,res)=>{
 })
 
 
-app.get('/*',(req,res)=>{
+app.get('/*', (req,res)=>{
 	res.sendFile(path.join(__dirname+'/client/build/index.html'))
 })
 
