@@ -17,11 +17,13 @@ const Content = (props) => {
 			<SideContent user={props.user}/>
 			<Router>
 				<NavBar user = {props.user} />
-				<Route path = "/" exact render = {() => (<Feed user ={props.user} />)} />
+				
 				<Route path = "/user/:id" render = {(props) => (<UserProfile {...props} />)} />
 				<Route path = "/book/:id" render = {(props) => (<Book {...props} />)} />
 				<Route path = "/group/:id" render = {(props) => (<Group {...props}/>)} />
 				<Route path = "/search/:searchString" render = {(props) => (<SearchResult {...props} location = {window.location.pathname} key={window.location.pathname}/>)}/>
+				<Route path = "/" exact render = {() => (<Feed user ={props.user} />)} />
+				<Route path = "/signup"  render = {() => (<Feed user ={props.user} />)} />
 			</Router>
 			<FriendList user ={props.user}/>
 		</div>
