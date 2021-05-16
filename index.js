@@ -70,6 +70,29 @@ app.get('/api/user/:userId', async (req, res) => {
 	res.json(data.rows)
 })
 
+/**
+ * Returns the groups that a user is part of
+ * 
+ */
+ app.get('/api/user/:userId/groups', async (req, res) => {
+	const data = await db.query(`SELECT * FROM users WHERE "ID_user" = $1`,[req.params["userId"]]);
+	if(data.rowCount === 0){
+		return res.status(500).json({message:"Not a user with that ID"});
+	}
+	try{
+		const groups = await db.query(`SELECT "ID_group" FROM users_group WHERE "ID_user" = $1`,[req.params["userId"]]);
+		let arrOfGroups = [];
+		groups.rows.forEach((el)=>{
+			arrOfGroups.push(parseInt(el.ID_group));
+		})
+		res.status(200).json(arrOfGroups);
+	}catch(err){
+		console.log(err.stack);
+		return res.status(500);
+	}
+})
+
+
 app.get('/api/users/:userSearchString', async (req, res) => {
   // will return a list of users that match userSearchString
 	// all the filtering parametes (such as sorting alphabetically) will be found in req.params
@@ -138,6 +161,28 @@ app.put('/api/groups',jsonParser,async(req,res)=>{
 	}catch(err){
 		console.log(err.stack);
 		res.status(500);
+	}
+})
+
+/**
+ * Returns a list of IDs corresponding to users in specified group
+ */
+app.get('/api/group/:groupID/users',async(req,res)=>{
+	const data = await db.query(`SELECT * FROM groups WHERE "ID_group" = $1`,[req.params["groupID"]]);
+	if(data.rowCount === 0){
+		return res.status(500).json({message:"Not a group with that ID"});
+	}
+	try{
+		const users = await db.query(`SELECT "ID_user" FROM users_group WHERE "ID_group" = $1`,[req.params["groupID"]]);
+		let arrOfUsers = [];
+		users.rows.forEach((el)=>{
+			arrOfUsers.push(parseInt(el.ID_user));
+		})
+		res.status(200).json(arrOfUsers);
+
+	}catch(err){
+		console.log(err.stack);
+		return res.status(500);
 	}
 })
 
