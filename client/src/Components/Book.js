@@ -8,23 +8,29 @@ const Book = (props) => {
 
 	useEffect(()=>{
 		// will make call to API but we will hardcode this for now
-		const bookObj = {
-			"imgUrl":"https://i.pinimg.com/originals/0d/2c/09/0d2c0915b3c86c8ac0680f3f6c88731d.jpg",
-			"title":"1984",
-			"authors":["George Orwell"]
-		}
+		fetch(`/api/books/${id}`, {
+			 "method":"GET",
+			 "headers": {
+			              "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
+			            }
 
-		setBook(bookObj)
+			        }).then(response => {return response.json()})
+					.then(response => {
+						
+						setBook(response[0])
+					})
+		
 	},[])
 
 	if(book) {
+		console.log(book)
 		return(
 
 			<div className = "book">
-				<h1> {book.title} </h1>
-				{book.authors.map(x => (<h2>{x}</h2>))}
-				<img src = {book.imgUrl} className = "bookImg"/>
-
+				<h1> {book.volumeInfo.title} </h1>
+				{book.volumeInfo.authors.map(x => (<h2>{x}</h2>))}
+				<img src = {book.volumeInfo.imageLinks.smallThumbnail} className = "bookImg"/>
+				<p>{book.volumeInfo.publishedDate} </p>
 			</div>
 		)
 	}

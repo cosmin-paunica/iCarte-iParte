@@ -1,16 +1,17 @@
 import './SearchResult.css'
 import React, {useEffect, useState,useRef} from 'react'
+import {Link} from 'react-router-dom'
 const SearchResult = (props) => {
 
 
 
-	console.log(props)
+	
 
 	const [searchString,setSearchString] = useState(props.location.split("/")[2])
 	const isInitialMount = useRef(true)
 	
 	
-	console.log(searchString)
+
 
 	const [results,setResults] = useState(null)
 
@@ -24,18 +25,27 @@ const SearchResult = (props) => {
 
 	        }).then(response => {console.log("raspuns",response); return response.json()})
 			.then(response => {
+				
 				response.length > 0 ? setResults(response) : setResults([])
 			})
 	},[])
 
 	
-	if(results !== null) {
+	if(results !== null && results !== []) {
 		return(
 			<div className="SearchResult">
 				{
 					results.map(book => (
-						<h1> {book.volumeInfo.title} </h1>
-					))
+							<Link to={`/book/${book.id}`}>
+							<div className ="bookSearchResult">
+								<img src = {book.volumeInfo.imageLinks.smallThumbnail} />
+								<h1> {book.volumeInfo.title} </h1>
+								
+
+							</div>
+							</Link>
+						)
+					)
 				}
 			</div>
 		)
