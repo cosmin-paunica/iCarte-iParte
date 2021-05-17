@@ -12,7 +12,7 @@ const NavBar = (props) => {
 				history.push(`/search/${searchString}`)
 			}
 		}
-	
+
 	}		
 
 	return(

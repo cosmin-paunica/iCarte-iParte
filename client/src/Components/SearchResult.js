@@ -4,8 +4,8 @@ import {Link} from 'react-router-dom'
 const SearchResult = (props) => {
 
 
-
 	
+
 
 	const [searchString,setSearchString] = useState(props.location.split("/")[2])
 	const isInitialMount = useRef(true)
@@ -16,6 +16,7 @@ const SearchResult = (props) => {
 	const [bookResults,setBookResults] = useState(null)
 	const [userResults, setUserResults] = useState(null)
 	const [groupResults,setGroupResults] = useState(null)
+
 
 	useEffect(() => {
 
