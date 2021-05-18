@@ -2,10 +2,12 @@
 
 ## User stories
 - Ca dezvoltator, doresc sa stochez date despre utilizatori in urmatoarele tabele:
-  - USERS (email, ....)
-	- ....
-	- ....
-	- (restul de tabele) -> completati voi
+  - USERS (id_user#, email, username, password)
+  - GROUPS (id_group#, name, description, id_admin)
+  - REVIEWS (id_review#, id_carte#, id_user)
+  - BOOKS_READ (id_user#, id_book#, start_date, finish_date)
+  - FOLLOWAGE (id_user#, id_friend#, pending, accept_date)
+  - USERS_GROUP (id_user#, id_group#)
 
 - Ca dezvoltator, doresc sa implementez baza de date in cloud (folosind elephant sql)
 
