@@ -24,8 +24,11 @@ ul.navbar > li#myprofile {
 ul.navbar > input[type="text"] {
   padding: 6px;
   border: none;
-  margin-left:10px;
-  
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 24%;
 }
 
 ul.navbar > li:hover {

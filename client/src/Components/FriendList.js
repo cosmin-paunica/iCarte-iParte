@@ -28,6 +28,8 @@ const FriendList = (props) => {
 	
 	return(
 		<div className="friendList">
+			<h2>Friends</h2>
+			<hr></hr>
 			{
 				friends.map(friend => <Friend username={friend.username} profile_pic={friend.profile_pic} key ={friend.username}/>)
 			}
