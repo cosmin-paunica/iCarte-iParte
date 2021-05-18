@@ -290,13 +290,15 @@ app.post("/api/reviews",jsonParser,async(req,res)=>{
 	const bookID = req.body.ID_carte;
 	const comment = req.body.comment;
 	const rating = req.body.rating;
-	// const userID = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
-	// if(userID.rowCount == 0){
-	// 	 res.sendStatus(500)
-	// }
-	const userID = 1;
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	try{
-		const resQuery = db.query(`INSERT INTO reviews("ID_carte",comment,rating,"ID_user") VALUES ($1,$2,$3,$4)`,[bookID,comment,rating,userID])
+		const resQuery = db.query(`INSERT INTO reviews("ID_carte",comment,rating,"ID_user") VALUES ($1,$2,$3,$4)`,[bookID,comment,rating,loggedInUserID])
 		res.status(200).json({message:"Review added"});
 	}catch(err){
 		console.log(err.stack);
@@ -317,13 +319,13 @@ app.put("/api/reviews",jsonParser,async(req,res)=>{
 	}
 	const updatedComment = req.body.comment;
 	const updatedRating = req.body.rating;
-	// const loggedUserID = await db.query(`SELECT * FROM users WHERE "username" = $1`,[req.session.username]);
-	// if(loggedUserID.rowCount ==0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedUserID= loggedUserID.rows[0].ID_user
-	// }
-	const loggedUserID = 1;
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	if(resQuery.rows[0].ID_user!= loggedUserID){
 		return res.status(500).json({message:"YOu dont have acces to modify this review"});
 	}
@@ -344,13 +346,13 @@ app.delete("/api/reviews/:reviewID",async(req,res)=>{
 	if(data.rowCount == 0){
 		return res.status(500).json("No review with that ID in database");
 	}
-	// const loggedUserID = await db.query(`SELECT * FROM users WHERE "username" = $1`,[req.session.username]);
-	// if(loggedUserID.rowCount ==0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedUserID= loggedUserID.rows[0].ID_user
-	// }
-	const loggedUserID = 1;
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	if(data.rows[0].ID_user != loggedUserID){
 		return res.status(500).json({message:"You cant delete this review"});
 	}
@@ -369,12 +371,13 @@ app.delete("/api/reviews/:reviewID",async(req,res)=>{
 app.post("/api/reading/:bookID",async (req,res)=>{
 	const bookID = req.params["bookID"];
 	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	const loggedInUserID = 1;
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	const isReadingAlready = await db.query(`SELECT * FROM books_read WHERE "ID_user" = $1 AND "ID_book" = $2`,[loggedInUserID,bookID]);
 	if(isReadingAlready.rowCount != 0){
 		return res.status(500).json({message:"Already reading this book"});
@@ -495,13 +498,13 @@ app.post("/api/accept/:followID",async(req,res)=>{
  */
 app.post("/api/unfollow/:userID",async(req,res)=>{
 	const followID= req.params["userID"];
-	const loggedInUserID = 1;
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	try{
 		const resQuery = await db.query(`DELETE FROM followage WHERE "ID_user" = $1 AND "ID_friend" = $2 `,[loggedInUserID,followID]);
 		// console.log(resQuery);
