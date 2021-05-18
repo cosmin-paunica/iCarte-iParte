@@ -22,6 +22,13 @@ const Book = (props) => {
 		
 	},[])
 
+	const addToList = ()=>{
+		fetch(`/api/reading/${id}`,{method:"POST"}).then(
+			console.log("Adaugat la lista")
+		).catch(e=>{
+			console.log(e)
+		})
+	}
 	if(book) {
 		console.log(book)
 		return(
@@ -31,6 +38,7 @@ const Book = (props) => {
 				{book.data.volumeInfo.authors.map(x => (<h2>{x}</h2>))}
 				<img src = {book.data.volumeInfo.imageLinks.smallThumbnail} className = "bookImg"/>
 				<p>{book.data.volumeInfo.publishedDate} </p>
+				<button onClick={addToList}>Adauga la cartile tale</button>
 			</div>
 		)
 	}
