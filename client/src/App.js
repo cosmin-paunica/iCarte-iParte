@@ -30,7 +30,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App app-background">
       <NavBar user = {user} />
       Logged in as {user}
     </div>

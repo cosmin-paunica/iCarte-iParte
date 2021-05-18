@@ -1,0 +1,11 @@
+::-webkit-scrollbar {
+    background: transparent;
+}
+
+.feed {
+	background-color: #0000008a;;
+	padding-top: 50px;
+	overflow-y: scroll;
+	color: white;
+	text-align: center;
+}
