@@ -3,16 +3,16 @@ import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
 const NavBar = (props) => {
 
-	let myTimeout = null
 	const history = useHistory()
+
 	const handleChange = (e) => {
 		const searchString = e.target.value
-		clearTimeout(myTimeout)
-		console.log(e.target.value)
-		console.log(e.key === 'Enter')
-		if(e.which === 13) {
-			history.push(`/search/${searchString}`)
+		if(e.key === 'Enter'){
+			if(searchString && searchString.trim() !== ""){
+				history.push(`/search/${searchString}`)
+			}
 		}
+
 	}		
 
 	return(

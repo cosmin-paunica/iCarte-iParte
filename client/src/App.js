@@ -6,6 +6,7 @@ import LoginForm from './Components/LoginForm.js'
 import SignUpForm from './Components/SignUpForm.js'
 import React, {useEffect, useState} from 'react'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+
 function App() {
 
   const [user,setUser] = useState(null)
@@ -13,6 +14,7 @@ function App() {
   const loginUser = (user) => {
     setUser(user)
     sessionStorage.user = user
+
   }
 
   useEffect(() => {
