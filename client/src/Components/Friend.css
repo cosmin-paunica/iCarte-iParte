@@ -1,16 +1,23 @@
 .friend {
-	width:100%;
-	padding:20px;
-	border-bottom:1px solid black;
+	width: 100%;
+	padding: 20px;
+	cursor: pointer;
 }
 
-.friend > .friend_pic {
+.friend .friend_pic {
 	height:50px;
 	width:50px;
 	border-radius:50%;
 	vertical-align:middle;
 }
 
-.friend > .friend_username {
-	margin-left:5px;
+.friend .friend_username {
+	margin-left: 5px;
+	font-size: 18px;
+	color: cyan;
+}
+
+.friend:hover {
+	color: white;
+	background: #00000091;
 }

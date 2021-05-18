@@ -65,35 +65,34 @@ const SearchResult = (props) => {
 			<div className="searchResult">
 				{
 					bookResults.map(book => (
-							<Link to={`/book/${book.id}`}>
 							<div className ="bookSearchResult">
-								<img src = {book.volumeInfo.imageLinks.smallThumbnail} />
-								<h1> {book.volumeInfo.title} </h1>
-								
+								<Link to={`/book/${book.id}`}>
+									<img src = {book.volumeInfo.imageLinks.smallThumbnail} />
+									<h1> {book.volumeInfo.title} </h1>
+								</Link>
 
 							</div>
-							</Link>
 						)
 					)
 				}
 
 				{
 					userResults.map(user => (
-						<Link to = {`/user/${user.ID_user}`}>
 							<div className="userSearchResult">
-								<h1>{user.username}</h1>
+								<Link to = {`/user/${user.ID_user}`}>
+									<h1>{user.username}</h1>
+								</Link>
 							</div>
-						</Link>
 					))
 				}
 
 				{
 					groupResults.map(group => (
-						<Link to = {`/group/${group.ID_group}`}>
 							<div className ="groupSearchResult">
-								<h1>{group.name}</h1>
+								<Link to = {`/group/${group.ID_group}`}>
+									<h1>{group.name}</h1>
+								</Link>
 							</div>
-						</Link>
 					))
 				}
 				
