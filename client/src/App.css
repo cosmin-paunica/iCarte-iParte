@@ -13,3 +13,6 @@
   background-position: center;
 }
 
+*{
+  box-sizing: border-box;
+}
