@@ -33,7 +33,7 @@ const Book = (props) => {
 		console.log(book)
 		return(
 
-			<div className = "book">
+			<div className = "book searchResult">
 				<h1> {book.data.volumeInfo.title} </h1>
 				{book.data.volumeInfo.authors.map(x => (<h2>{x}</h2>))}
 				<img src = {book.data.volumeInfo.imageLinks.smallThumbnail} className = "bookImg"/>

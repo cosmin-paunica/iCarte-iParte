@@ -33,10 +33,11 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App app-background">
       
       <Content user ={user}/>
       
+
     </div>
   );
 }
