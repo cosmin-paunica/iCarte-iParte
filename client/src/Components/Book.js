@@ -51,7 +51,13 @@ const Book = (props) => {
 				comment: review
 			})
 
+		}).then(res=>{
+			setReviews(reviews => [...reviews,{ID_carte:id, 
+				rating: rating,
+				comment: review}])
+				
 		})
+
 	}	
 	if(book) {
 		console.log(book)

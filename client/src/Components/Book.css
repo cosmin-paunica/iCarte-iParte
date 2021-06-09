@@ -6,3 +6,10 @@
 	width:100px;
 	height:200px;
 }
+
+form>input[type=number] {
+	background-color: black;
+}
+form>input[type=submit] {
+	border: 1px solid black;
+}

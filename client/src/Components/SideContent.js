@@ -10,20 +10,22 @@ const SideContent = (props) => {
 		console.log(readings)
 		setBooks(readings)
 	},[])
-	const finishBook = (id_book)=>{
+	const finishBook = (evt,id_book)=>{
 		fetch(`/api/finish/${id_book}`,{method:"POST"}).then(()=>{
-			console.log("TErminat carte")
+			console.log("Terminat carte")
 		}).catch(e=>console.log(e));
+		evt.target.style.display="none"
 	}
 	return(
 		<div className="sidecontent">
 			<h3>My Books</h3>
 			{
-				books.map(e=> {
+				books.map(book=> {
 					return <div>
-						<a href={`/book/${e.ID_book}`}>{e.ID_book}</a> 
+						<a className="bookID" href={`/book/${book.ID_book}`}>{book.ID_book}</a> 
 						{
-							(e.finish_date == null) && <span onClick={()=>finishBook(e.ID_book)}>Termina Cartea</span>
+							(book.finish_date == null) ? <span className="finishBook" onClick={(evt)=>finishBook(evt,book.ID_book)}>Termina Cartea</span> : 
+							<span className="finishedBook">Carte terminata</span> 
 						}
 					
 					</div>})

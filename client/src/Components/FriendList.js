@@ -43,15 +43,19 @@ const FriendList = (props) => {
 		setAcceptRequests(requests.filter(e=>e.pending === true))
 	}, [])
 
-	const follow = async(id)=>{
+	const follow = async(evt,id)=>{
 		let res = await fetch(`/api/follow/${id}`,{method:"POST"})
 		res = await res.json()
 		console.log(res);
+		evt.target.parentNode.style.display="none"
+
 	}
-	const acceptFollow = async(id)=>{
+	const acceptFollow = async(evt,id)=>{
 		let res = await fetch(`/api/accept/${id}`,{method:"POST"})
 		res = await res.json()
 		console.log(res);
+		evt.target.parentNode.style.display="none"
+
 	}
 
 	
@@ -64,12 +68,12 @@ const FriendList = (props) => {
 			}
 			<h2>Cereri de follow</h2>
 			{
-				acceptRequests.map(req => <div key ={req.username}><span>{req.username}</span> <a onClick={()=>acceptFollow(req.ID_user)}>Accept Follow</a> </div>)
+				acceptRequests.map(req => <div key ={req.username}><span>{req.username}</span> <a onClick={(evt)=>acceptFollow(evt,req.ID_user)}>Accept Follow</a> </div>)
 			}
 			<h2>Recomandari de prieteni</h2>
 			<hr></hr>
 			{
-				people.map(person => <div key ={person.username}><span>{person.username}</span> <a onClick={()=>follow(person.ID_user)}>Follow</a> </div> )
+				people.map(person => <div key ={person.username}><span>{person.username}</span> <a onClick={(evt)=>follow(evt,person.ID_user)}>Follow</a> </div> )
 			}
 		</div>
 	)
