@@ -4,14 +4,14 @@ import React, {useState, useEffect} from 'react'
 const SideContent = (props) => {
 	const [books,setBooks] = useState([])
 	useEffect(async()=>{
-		let readings = await fetch(`api/getReadingList`);
+		let readings = await fetch(`/api/getReadingList`);
 		readings = await readings.json();
 		console.log("Reading");
 		console.log(readings)
 		setBooks(readings)
 	},[])
 	const finishBook = (id_book)=>{
-		fetch(`api/finish/${id_book}`,{method:"POST"}).then(()=>{
+		fetch(`/api/finish/${id_book}`,{method:"POST"}).then(()=>{
 			console.log("TErminat carte")
 		}).catch(e=>console.log(e));
 	}
@@ -21,7 +21,7 @@ const SideContent = (props) => {
 			{
 				books.map(e=> {
 					return <div>
-						<p>{e.ID_book}</p> 
+						<a href={`/book/${e.ID_book}`}>{e.ID_book}</a> 
 						{
 							(e.finish_date == null) && <span onClick={()=>finishBook(e.ID_book)}>Termina Cartea</span>
 						}

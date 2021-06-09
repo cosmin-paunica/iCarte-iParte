@@ -31,25 +31,25 @@ const FriendList = (props) => {
 		
 		setFriends(API_friends)
 
-		let newPeople = await fetch(`api/user`)
+		let newPeople = await fetch(`/api/user`)
 		newPeople = await newPeople.json()
 		newPeople = newPeople.filter(e=> API_friends.filter(f=> f.ID_user == e.ID_user).length ==0); // scot oamenii carora le-am dat follow
 
 		setPeople(newPeople)
 
-		let requests = await fetch(`api/followers`)
+		let requests = await fetch(`/api/followers`)
 		requests = await requests.json()
 		console.log(requests);
 		setAcceptRequests(requests.filter(e=>e.pending === true))
 	}, [])
 
 	const follow = async(id)=>{
-		let res = await fetch(`api/follow/${id}`,{method:"POST"})
+		let res = await fetch(`/api/follow/${id}`,{method:"POST"})
 		res = await res.json()
 		console.log(res);
 	}
 	const acceptFollow = async(id)=>{
-		let res = await fetch(`api/accept/${id}`,{method:"POST"})
+		let res = await fetch(`/api/accept/${id}`,{method:"POST"})
 		res = await res.json()
 		console.log(res);
 	}
