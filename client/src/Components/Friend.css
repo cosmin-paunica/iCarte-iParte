@@ -21,3 +21,16 @@
 	color: white;
 	background: #00000091;
 }
+.friendList{
+	color:white
+}
+.friendList>div>a{
+	background-color: rgba(64, 64, 255, 0.733);
+	color: white;
+	border-radius: 6px;
+	padding: 0.1em;
+	cursor: pointer;
+}
+.friendList>div{
+	margin-bottom: 0.5em;
+}
