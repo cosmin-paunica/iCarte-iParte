@@ -19,10 +19,12 @@ const SideContent = (props) => {
 	return(
 		<div className="sidecontent">
 			<h3>My Books</h3>
+			<div className="book-container">
 			{
 				books.map(book=> {
-					return <div>
-						<a className="bookID" href={`/book/${book.ID_book}`}>{book.ID_book}</a> 
+					return <div className="book-readingList">
+						<img src={book.thumbnail}/>
+						<a className="bookID" href={`/book/${book.ID_book}`}>{book.title}</a> 
 						{
 							(book.finish_date == null) ? <span className="finishBook" onClick={(evt)=>finishBook(evt,book.ID_book)}>Termina Cartea</span> : 
 							<span className="finishedBook">Carte terminata</span> 
@@ -30,6 +32,7 @@ const SideContent = (props) => {
 					
 					</div>})
 			}
+			</div>
 		</div>
 	)
 }
