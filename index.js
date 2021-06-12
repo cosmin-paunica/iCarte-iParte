@@ -50,6 +50,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {		// will make a 
 	
 })
 
+
 app.get('/api/book/:bookId', async (req,res) => {
 	// will return a single book with the id of bookId
 	const data = await books.volumes.get({volumeId:req.params["bookId"]}) 
@@ -545,6 +546,12 @@ app.get("/api/following",async(req,res)=>{
 	const data = await db.query(`SELECT u."ID_user",pending,accept_date,username,email FROM followage f JOIN users u ON f."ID_friend" = u."ID_user" WHERE f."ID_user" = $1`,[loggedInUserID]);
 	res.status(200).json(data.rows);
 
+})
+
+app.get("/api/group_posts/:groupID", async(req, res) => {
+	// hardcodez
+
+	res.status(200).json([{ID_user:1,post_timestamp:'DATE',post_text:'some sample post'}])
 })
 
 app.get('/*', (req,res)=>{
