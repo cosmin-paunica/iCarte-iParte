@@ -470,7 +470,7 @@ app.post("/api/follow/:followID",async(req,res)=>{
 	}else{
 		try{
 			await db.query(`INSERT INTO followage VALUES ($1,$2,$3,$4)`,[loggedInUserID,followID,true,null]);
-			res.sendStatus(200);
+			res.status(200).json({message:"Succes"});
 		}catch(err){
 			res.send(err.stack);
 		}
