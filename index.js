@@ -328,7 +328,7 @@ app.put("/api/reviews",jsonParser,async(req,res)=>{
 	}else{
 		loggedInUserID = loggedInUserID.rows[0].ID_user;
 	}
-	if(resQuery.rows[0].ID_user!= loggedUserID){
+	if(resQuery.rows[0].ID_user!= loggedInUserID){
 		return res.status(500).json({message:"YOu dont have acces to modify this review"});
 	}
 	try{
@@ -641,6 +641,84 @@ app.delete("/api/group_posts/:postID",async(req,res)=>{
 	}catch(err){
 		console.log(err.stack);
 		res.sendStatus(500);
+	}
+})
+
+/**
+ * Gets all the comments for a post
+ */
+app.get("/api/comments/:postID",async(req,res)=>{
+	const data = await db.query(`SELECT * FROM comments WHERE "ID_post"=$1`,[req.params["postID"]])
+
+	res.status(200).json(data.rows)
+})
+
+/**
+ * Create a new comment
+ */
+app.post("/api/comments",async(req,res)=>{
+	const ID_post = req.body.ID_post;
+	const comment_text = req.body.comment_text;
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	try{
+		const resQuery = db.query(`INSERT INTO comments("ID_post","ID_user","comment_text") 
+															VALUES($1,$2,$3)`,[ID_post,loggedInUserID,comment_text])
+		res.status(200).json({message:"Comment added"})
+	}catch(err){
+		console.log(err.stack);
+		res.sendStatus(500);
+	}
+})
+/**
+ * Updates a comment
+ * ? Comments dont have spcific id, so only one comment is allowed per user per post
+ * ? we use those ids to identify the comment in db
+ */
+app.put("/api/comments",async(req,res)=>{
+	const ID_post = req.body.ID_post
+	const ID_user = req.body.ID_user
+	const new_comment_text = req.body.comment_text
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	loggedInUserID = loggedInUserID.rows[0].ID_user
+
+	if(ID_user != loggedInUserID){
+		return res.status(500).json({message:"You dont have acces to modify this comment"});
+	}
+	try{
+		const resQuery = await db.query(`UPDATE comments SET "comment_text" = $1 
+												WHERE "ID_post" = $2 AND "ID_user"=$3`,[new_comment_text,ID_post,ID_user])
+		res.status(200).json({message:"Comment edited"})
+	}catch(err){
+		console.log(err.stack)
+		res.sendStatus(500)
+	}
+})
+
+/**
+ * Deletes a comment
+ * ? same problem as above
+ * ! this needs an entire comment, not just the id
+ */
+app.delete("/api/comments",async(req,res)=>{
+	const ID_post = req.body.ID_post;
+	const ID_user = req.body.ID_user;
+
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	loggedInUserID = loggedInUserID.rows[0].ID_user
+	if(ID_user != loggedInUserID){
+		return res.status(500).json({message:"You dont have acces to modify this post"});
+	}
+	try{
+		const resQuery = await db.query(`DELETE FROM comments WHERE "ID_user"=$1 AND "ID_post"=$2`,[ID_user,ID_post])
+		res.status(200).json({message:"Comment deleted"})
+	}catch(err){
+		console.log(err.stack)
+		res.sendStatus(500)
 	}
 })
 
