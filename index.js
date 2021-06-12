@@ -139,7 +139,8 @@ app.post('/api/groups',jsonParser,async(req,res)=>{
 	const groupDescription = req.body.description;
 	// const idAdmin = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
 	//TODO get id from req
-	const idAdmin = 1;
+	const idAdmin =  1;
+
 	try{
 		const resQuery = await db.query(`INSERT INTO groups(name,description,"ID_Admin") VALUES ($1,$2,$3)`,[groupName,groupDescription,idAdmin]);
 		console.log(resQuery.rows);
