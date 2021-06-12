@@ -440,8 +440,7 @@ app.get("/api/getReadingList/",async(req,res)=>{
 
 	let data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[loggedInUserID]);
 	let rows = await Promise.all(data.rows.map(async(e)=>{
-		let book_info = await books.volumes.get({volumeId:e.ID_book}).data;
-		console.log(book_info)
+		let book_info = (await books.volumes.get({volumeId:e.ID_book})).data;
 		e.title =  book_info.volumeInfo.title;
 		e.thumbnail =  book_info.volumeInfo.imageLinks.thumbnail
 		return e

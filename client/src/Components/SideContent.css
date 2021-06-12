@@ -19,3 +19,22 @@
 .bookID:visited{
 	color:white;
 }
+.book-container{
+	display: flex;
+	column-gap: 1em;
+	flex-flow: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+
+}
+.book-container>div>img{
+	height: 8em;
+	
+}
+.book-readingList{
+  display: flex;
+  text-align: center;
+	align-items: center;
+  flex-flow: column;
+	width: 7em;
+}
