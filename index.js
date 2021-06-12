@@ -9,6 +9,7 @@ const {google, dlp_v2} = require('googleapis')
 const {db} = require('./config/db.js')
 const { info } = require('console')
 const {checkSignUpInput} = require('./utilities/validations')
+const e = require('express')
 
 
 const books = google.books({
@@ -437,8 +438,17 @@ app.get("/api/getReadingList/",async(req,res)=>{
 		loggedInUserID = loggedInUserID.rows[0].ID_user;
 	}
 
-	const data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[loggedInUserID]);
-	res.status(200).json(data.rows);
+	let data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[loggedInUserID]);
+	let rows = await Promise.all(data.rows.map(async(e)=>{
+		let book_info = await books.volumes.get({volumeId:e.ID_book}).data;
+		console.log(book_info)
+		e.title =  book_info.volumeInfo.title;
+		e.thumbnail =  book_info.volumeInfo.imageLinks.thumbnail
+		return e
+	}))
+
+	
+	res.status(200).json(rows);
 })
 
 /**
