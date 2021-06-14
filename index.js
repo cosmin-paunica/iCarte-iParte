@@ -451,6 +451,18 @@ app.get("/api/getReadingList/",async(req,res)=>{
 	res.status(200).json(rows);
 })
 
+app.get("/api/getReadingList/:userID",async(req,res)=>{
+	let data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[req.params["userID"]])
+	let rows = await Promise.all(data.rows.map(async(e)=>{
+		let book_info = (await books.volumes.get({volumeId:e.ID_book})).data;
+		e.title =  book_info.volumeInfo.title;
+		e.thumbnail =  book_info.volumeInfo.imageLinks.thumbnail
+		return e
+	})) 
+
+	res.status(200).json(rows)
+})
+
 /**
  * Current logged user follows another user
  */
