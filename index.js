@@ -82,6 +82,28 @@ app.get('/api/user/:userId', async (req, res) => {
 })
 
 /**
+ * Returns the groups that the current user is part of
+ * 
+ */
+ app.get('/api/user/current/groups', async (req, res) => {
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	try{
+		const groups = await db.query(`SELECT "ID_group",name FROM users_group JOIN "public"."groups" USING ("ID_group") WHERE "ID_user" = $1`,[loggedInUserID]);
+		
+		res.status(200).json(groups.rows);
+	}catch(err){
+		console.log(err.stack);
+		return res.status(500);
+	}
+})
+
+/**
  * Returns the groups that a user is part of
  * 
  */
@@ -216,6 +238,40 @@ app.delete('/api/groups/:groupID',async(req,res)=>{
 	}
 })
 
+app.post('/api/join/:groupID',async(req,res)=>{
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	try{
+		const resQury = await db.query(`INSERT INTO "users_group" VALUES ($1,$2) `,[loggedInUserID,req.params["groupID"]])
+		res.status(200).json({message:"Joined the group"})
+	}catch(err){
+		console.log(err.stack)
+		res.sendStatus(500)
+	}
+})
+
+app.post('/api/leave/:groupID',async(req,res)=>{
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	try{
+		const resQury = await db.query(`DELETE FROM "users_group" WHERE "ID_user" = $1 AND "ID_group"= $2 `,[loggedInUserID,req.params["groupID"]])
+		res.status(200).json({message:"Joined the group"})
+	}catch(err){
+		console.log(err.stack)
+		res.sendStatus(500)
+	}
+})
+
 
 app.post("/api/user",bodyParser.json(), async (req,res)=>{
 	const salt= bcrypt.genSaltSync(10)
@@ -278,7 +334,7 @@ app.get("/api/reviews/book/:bookID",async(req,res)=>{
  * Returns reviews made by a specific user
  */
  app.get("/api/reviews/user/:userID",async(req,res)=>{
-	const data = await db.query(`SELECT * FROM reviews WHERE "ID_user" = $1`,[req.params["userID"]]);
+	const data = await db.query(`SELECT "ID_user","ID_review","ID_carte",comment,rating,username FROM reviews JOIN users USING ("ID_user") WHERE "ID_user" = $1`,[req.params["userID"]]);
 	res.status(200).json(data.rows);
 })
 

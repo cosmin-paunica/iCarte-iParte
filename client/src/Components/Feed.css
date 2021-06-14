@@ -9,3 +9,17 @@
 	color: white;
 	text-align: center;
 }
+
+.feedPost{
+	display: flex;
+	flex-flow: column;
+	background-color: rgba(0,0,0,0.2);
+	border-radius: 1em;
+	margin: 2em 1em;
+}
+.feedPost>*{
+	margin: 0.2em;
+}
+.feedPost > a {
+	color: blueviolet
+}
