@@ -3,7 +3,7 @@ import React, {useEffect,useState} from 'react'
 const Book = (props) => {
 
 	const [book, setBook] = useState(null)
-	const [rating,setRating] = useState(0)
+	const [rating,setRating] = useState(5)
 	const [review,setReview] = useState("")
 	const [reviews,setReviews] = useState([])
 
@@ -70,7 +70,7 @@ const Book = (props) => {
 				<p>{book.data.volumeInfo.publishedDate} </p>
 				<button onClick={addToList}>Adauga la cartile tale</button>
 				<form onSubmit={submitReview}>
-					<input type="number" name="rating" onChange={e => setRating(e.target.value)}/>
+					<input type="number" min="1" max="5" name="rating" value={rating} onChange={e => setRating(e.target.value)}/>
 					<textarea name="review" onChange={e=>setReview(e.target.value)}></textarea>
 					<input type="submit" value="Adauga review" />
 				</form>
