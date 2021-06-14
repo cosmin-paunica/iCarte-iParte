@@ -6,6 +6,23 @@
 	text-align: center;
 }
 
+.searchResult ul li {
+	list-style: none;
+	position: relative;
+	text-align: left;
+}
+  
+.searchResult ul li:before {
+	content: "";
+	position: absolute;
+	left: -30px;
+	display: inline-block;
+	height: 21px;
+	width: 21px;
+	background-size: contain;
+	background-image: url("../books-icon.jpg");
+}
+
 ::-webkit-scrollbar {
     background: transparent;
 }

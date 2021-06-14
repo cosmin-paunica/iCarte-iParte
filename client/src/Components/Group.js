@@ -98,6 +98,7 @@ const Group = (props) => {
 						<h2> {p.username} </h2>
 						<p> {p.post_timestamp} </p>
 						<p> {p.post_text} </p>
+						<hr></hr>
 					</div>
 				))
 			}
