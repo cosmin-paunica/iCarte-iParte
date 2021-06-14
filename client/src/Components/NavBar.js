@@ -15,9 +15,14 @@ const NavBar = (props) => {
 
 	}		
 
+	const handleClick = () => {
+		history.push('/createGroup')
+	}
+
 	return(
 		<ul className="navbar" id ="navbar">
 			<li> iCarte-iParte </li>
+			<li id = "createGroup" onClick = {handleClick}> Create a group </li>
 			<li id ="myprofile"> {props.user} </li>
 			<input type="text" placeholder="Search.." onKeyPress = {handleChange}/>
 		</ul>
