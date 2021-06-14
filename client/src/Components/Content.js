@@ -4,12 +4,13 @@ import Feed from './Feed.js'
 import SideContent from './SideContent.js'
 import Book from './Book.js'
 import SearchResult from './SearchResult.js'
-import NavBar from './Navbar.js'
-import React, {useEffect,useState} from 'react'
 
+import NavBar from './NavBar.js'
+import React, {useEffect,useState} from 'react'
 
 import UserProfile from './UserProfile.js'
 import Group from './Group.js'
+import CreateGroupForm from './CreateGroupForm.js'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 const Content = (props) => {
@@ -23,6 +24,7 @@ const Content = (props) => {
 				<Route path = "/user/:id" render = {(props) => (<UserProfile {...props} />)} />
 				<Route path = "/book/:id" render = {(props) => (<Book {...props} />)} />
 				<Route path = "/group/:id" render = {(props) => (<Group {...props}/>)} />
+				<Route path = "/createGroup" render = {(props) => (<CreateGroupForm {...props} />)}/>
 				<Route path = "/search/:searchString" render = {(props) => (<SearchResult {...props} location = {window.location.pathname} key={window.location.pathname}/>)}/>
 				<Route path = "/" exact render = {() => (<Feed user ={props.user} />)} />
 				<Route path = "/signup"  render = {() => (<Feed user ={props.user} />)} />

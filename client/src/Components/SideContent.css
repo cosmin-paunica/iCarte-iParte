@@ -1,4 +1,52 @@
 .sidecontent {
-	background-color:lightgrey;
+	background-color: #0000008a;
 	padding-top:50px;
+	color:white
+}
+
+.sidecontent>h2 {
+	text-align: center;
+}
+
+.finishBook{
+	cursor: pointer;
+	color:white;
+}
+
+.finishBook:hover{
+	border: 1px solid yellow;
+}
+
+.bookID{
+	font-weight: 600;
+}
+
+.bookID::after{
+	content: "|";
+}
+
+.bookID:visited{
+	color:white;
+}
+
+.book-container{
+	display: flex;
+	column-gap: 1em;
+	flex-flow: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+
+}
+
+.book-container>div>img{
+	height: 8em;
+	
+}
+
+.book-readingList{
+  display: flex;
+  text-align: center;
+	align-items: center;
+  flex-flow: column;
+	width: 7em;
 }

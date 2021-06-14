@@ -9,6 +9,7 @@ const {google, dlp_v2} = require('googleapis')
 const {db} = require('./config/db.js')
 const { info } = require('console')
 const {checkSignUpInput} = require('./utilities/validations')
+const e = require('express')
 
 
 const books = google.books({
@@ -50,6 +51,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {		// will make a 
 	
 })
 
+
 app.get('/api/book/:bookId', async (req,res) => {
 	// will return a single book with the id of bookId
 	const data = await books.volumes.get({volumeId:req.params["bookId"]}) 
@@ -63,6 +65,14 @@ app.get('/api/books/:bookSearchString', async (req,res) => {
 	const booksReturned = await books.volumes.list({q:req.params["bookSearchString"]})
 	const data = booksReturned.data.items.filter(book => book.volumeInfo.readingModes.image==true)
 	res.json(data)
+})
+/**
+ * Get all users
+ */
+app.get('/api/user', async (req, res) => {
+	//will return a single user with the id of userId
+	const data = await db.query(`SELECT * FROM users`);
+	res.json(data.rows)
 })
 
 app.get('/api/user/:userId', async (req, res) => {
@@ -129,15 +139,7 @@ app.post('/api/groups',jsonParser,async(req,res)=>{
 	const groupDescription = req.body.description;
 	const idAdmin = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
 	//TODO get id from req
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	const idAdmin = 1;
-=======
-=======
->>>>>>> Stashed changes
-	
 
->>>>>>> Stashed changes
 	try{
 		const resQuery = await db.query(`INSERT INTO groups(name,description,"ID_Admin") VALUES ($1,$2,$3)`,[groupName,groupDescription,idAdmin]);
 		console.log(resQuery.rows);
@@ -182,12 +184,9 @@ app.get('/api/group/:groupID/users',async(req,res)=>{
 		return res.status(500).json({message:"Not a group with that ID"});
 	}
 	try{
-		const users = await db.query(`SELECT "ID_user" FROM users_group WHERE "ID_group" = $1`,[req.params["groupID"]]);
-		let arrOfUsers = [];
-		users.rows.forEach((el)=>{
-			arrOfUsers.push(parseInt(el.ID_user));
-		})
-		res.status(200).json(arrOfUsers);
+		const users = await db.query(`SELECT "ID_user","username" FROM users_group JOIN "public"."users" USING("ID_user") WHERE "ID_group" = $1`,[req.params["groupID"]]);
+
+		res.status(200).json(users.rows);
 
 	}catch(err){
 		console.log(err.stack);
@@ -271,7 +270,7 @@ app.get("/api/reviews/:reviewID",async(req,res)=>{
  * Returns tha reviews for a single book
  */
 app.get("/api/reviews/book/:bookID",async(req,res)=>{
-	const data = await db.query(`SELECT * FROM reviews WHERE "ID_carte" = $1`,[req.params["bookID"]]);
+	const data = await db.query(`SELECT * FROM reviews JOIN "public"."users" USING ("ID_user") WHERE "ID_carte" = $1`,[req.params["bookID"]]);
 	res.status(200).json(data.rows);
 })
 
@@ -290,13 +289,15 @@ app.post("/api/reviews",jsonParser,async(req,res)=>{
 	const bookID = req.body.ID_carte;
 	const comment = req.body.comment;
 	const rating = req.body.rating;
-	// const userID = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
-	// if(userID.rowCount == 0){
-	// 	 res.sendStatus(500)
-	// }
-	const userID = 1;
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	try{
-		const resQuery = db.query(`INSERT INTO reviews("ID_carte",comment,rating,"ID_user") VALUES ($1,$2,$3,$4)`,[bookID,comment,rating,userID])
+		const resQuery = db.query(`INSERT INTO reviews("ID_carte",comment,rating,"ID_user") VALUES ($1,$2,$3,$4)`,[bookID,comment,rating,loggedInUserID])
 		res.status(200).json({message:"Review added"});
 	}catch(err){
 		console.log(err.stack);
@@ -317,14 +318,14 @@ app.put("/api/reviews",jsonParser,async(req,res)=>{
 	}
 	const updatedComment = req.body.comment;
 	const updatedRating = req.body.rating;
-	// const loggedUserID = await db.query(`SELECT * FROM users WHERE "username" = $1`,[req.session.username]);
-	// if(loggedUserID.rowCount ==0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedUserID= loggedUserID.rows[0].ID_user
-	// }
-	const loggedUserID = 1;
-	if(resQuery.rows[0].ID_user!= loggedUserID){
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	if(resQuery.rows[0].ID_user!= loggedInUserID){
 		return res.status(500).json({message:"YOu dont have acces to modify this review"});
 	}
 	try{
@@ -344,14 +345,14 @@ app.delete("/api/reviews/:reviewID",async(req,res)=>{
 	if(data.rowCount == 0){
 		return res.status(500).json("No review with that ID in database");
 	}
-	// const loggedUserID = await db.query(`SELECT * FROM users WHERE "username" = $1`,[req.session.username]);
-	// if(loggedUserID.rowCount ==0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedUserID= loggedUserID.rows[0].ID_user
-	// }
-	const loggedUserID = 1;
-	if(data.rows[0].ID_user != loggedUserID){
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	if(data.rows[0].ID_user != loggedInUserID){
 		return res.status(500).json({message:"You cant delete this review"});
 	}
 	try{
@@ -369,12 +370,13 @@ app.delete("/api/reviews/:reviewID",async(req,res)=>{
 app.post("/api/reading/:bookID",async (req,res)=>{
 	const bookID = req.params["bookID"];
 	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	const loggedInUserID = 1;
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	const isReadingAlready = await db.query(`SELECT * FROM books_read WHERE "ID_user" = $1 AND "ID_book" = $2`,[loggedInUserID,bookID]);
 	if(isReadingAlready.rowCount != 0){
 		return res.status(500).json({message:"Already reading this book"});
@@ -392,13 +394,13 @@ app.post("/api/reading/:bookID",async (req,res)=>{
  */
 app.post("/api/finish/:bookID",async (req,res)=>{
 	const bookID = req.params["bookID"];
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	const loggedInUserID = 1;
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	const isReadingAlready = await db.query(`SELECT * FROM books_read WHERE "ID_user" = $1 AND "ID_book" = $2`,[loggedInUserID,bookID]);
 	if(isReadingAlready.rowCount == 0){
 		/* if a book is marked as finished but never started, insert a row with start date and end date matching since the user might already read the book  */
@@ -426,14 +428,36 @@ app.post("/api/finish/:bookID",async (req,res)=>{
  */
 app.get("/api/getReadingList/",async(req,res)=>{
 	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	const loggedInUserID = 1;
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
-	const data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[loggedInUserID]);
-	res.status(200).json(data.rows);
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+
+	let data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[loggedInUserID]);
+	let rows = await Promise.all(data.rows.map(async(e)=>{
+		let book_info = (await books.volumes.get({volumeId:e.ID_book})).data;
+		e.title =  book_info.volumeInfo.title;
+		e.thumbnail =  book_info.volumeInfo.imageLinks.thumbnail
+		return e
+	}))
+
+	
+	res.status(200).json(rows);
+})
+
+app.get("/api/getReadingList/:userID",async(req,res)=>{
+	let data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[req.params["userID"]])
+	let rows = await Promise.all(data.rows.map(async(e)=>{
+		let book_info = (await books.volumes.get({volumeId:e.ID_book})).data;
+		e.title =  book_info.volumeInfo.title;
+		e.thumbnail =  book_info.volumeInfo.imageLinks.thumbnail
+		return e
+	})) 
+
+	res.status(200).json(rows)
 })
 
 /**
@@ -441,13 +465,13 @@ app.get("/api/getReadingList/",async(req,res)=>{
  */
 app.post("/api/follow/:followID",async(req,res)=>{
 	const followID= req.params["followID"];
-	const loggedInUserID = 1;
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	const alreadyFollow = await db.query(`SELECT * FROM followage WHERE "ID_user" =$1 AND "ID_friend" = $2`,[loggedInUserID,followID])
 	if(alreadyFollow.rowCount != 0)
 	{
@@ -455,7 +479,7 @@ app.post("/api/follow/:followID",async(req,res)=>{
 	}else{
 		try{
 			await db.query(`INSERT INTO followage VALUES ($1,$2,$3,$4)`,[loggedInUserID,followID,true,null]);
-			res.sendStatus(200);
+			res.status(200).json({message:"Succes"});
 		}catch(err){
 			res.send(err.stack);
 		}
@@ -467,13 +491,13 @@ app.post("/api/follow/:followID",async(req,res)=>{
  */
 app.post("/api/accept/:followID",async(req,res)=>{
 	const followID= req.params["followID"];
-	const loggedInUserID = 3;
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	try{
 		const resQuery = await db.query(`UPDATE followage SET pending = $1 , "accept_date" = $2 WHERE "ID_user" = $3 AND "ID_friend" = $4`,[false,new Date(),followID,loggedInUserID]);
 		if(resQuery.rowCount == 0){
@@ -493,13 +517,13 @@ app.post("/api/accept/:followID",async(req,res)=>{
  */
 app.post("/api/unfollow/:userID",async(req,res)=>{
 	const followID= req.params["userID"];
-	const loggedInUserID = 1;
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	try{
 		const resQuery = await db.query(`DELETE FROM followage WHERE "ID_user" = $1 AND "ID_friend" = $2 `,[loggedInUserID,followID]);
 		// console.log(resQuery);
@@ -514,14 +538,15 @@ app.post("/api/unfollow/:userID",async(req,res)=>{
  * Returns a list of followers for the current logged in user
  */
 app.get("/api/followers",async(req,res)=>{
-	const loggedInUserID = 3;
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
-	const data = await db.query(`SELECT f."ID_user",pending,accept_date,username,email FROM followage f JOIN users u ON f."ID_friend" = u."ID_user" WHERE f."ID_friend" = $1`,[loggedInUserID]);
+	// const loggedInUserID = 3;
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
+	const data = await db.query(`SELECT f."ID_user",pending,accept_date,username,email FROM followage f JOIN users u ON f."ID_user" = u."ID_user" WHERE f."ID_friend" = $1`,[loggedInUserID]);
 	res.status(200).json(data.rows);
 })
 
@@ -529,19 +554,18 @@ app.get("/api/followers",async(req,res)=>{
  * Returns a list of all the people that follow the current logged in user
  */
 app.get("/api/following",async(req,res)=>{
-	const loggedInUserID = 1;
-	// const loggedInUserID = await db.query("SELECT * FROM users WHERE username = $1",[req.session.username]);
-	// if(loggedInUserID.rowCount == 0){
-	// 	res.sendStatus(500);
-	// }else{
-	// 	loggedInUserID = loggedInUserID.rows[0].ID_user;
-	// }
+	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
+	console.log(req.session.username)
+	if(loggedInUserID.rowCount == 0){
+		return res.sendStatus(500);
+	}else{
+		loggedInUserID = loggedInUserID.rows[0].ID_user;
+	}
 	const data = await db.query(`SELECT u."ID_user",pending,accept_date,username,email FROM followage f JOIN users u ON f."ID_friend" = u."ID_user" WHERE f."ID_user" = $1`,[loggedInUserID]);
 	res.status(200).json(data.rows);
 
 })
-<<<<<<< Updated upstream
-=======
+
 /**
  * Returns a list of all the posts that have been made in a group
  */
@@ -555,7 +579,9 @@ app.get("/api/group_posts/:groupID", async(req, res) => {
 /**
  * Adds a group post in the db
  */
+
 app.post("/api/group_posts",jsonParser,async(req,res)=>{
+
 	const ID_group = req.body.ID_group;
 	const post_text = req.body.post_text;
 	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
@@ -565,7 +591,7 @@ app.post("/api/group_posts",jsonParser,async(req,res)=>{
 	}else{
 		loggedInUserID = loggedInUserID.rows[0].ID_user;
 	}
-	
+
 	try{
 		const resQuery = db.query(`INSERT INTO posts("ID_user","ID_group","post_text") VALUES ($1,$2,$3)`,[loggedInUserID,ID_group,post_text])
 		res.status(200).json({message:"Post added"});
@@ -708,7 +734,7 @@ app.delete("/api/comments",async(req,res)=>{
 		res.sendStatus(500)
 	}
 })
->>>>>>> Stashed changes
+
 
 app.get('/*', (req,res)=>{
 	res.sendFile(path.join(__dirname+'/client/build/index.html'))

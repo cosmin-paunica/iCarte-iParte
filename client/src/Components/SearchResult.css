@@ -1,3 +1,40 @@
 .searchResult {
+	background-color: #0000008a;;
+	padding-top: 50px;
+	overflow-y: scroll;
+	color: white;
+	text-align: center;
+}
 
+::-webkit-scrollbar {
+    background: transparent;
+}
+
+.bookSearchResult a{
+    color: aliceblue;
+}
+
+button {
+	margin: 1% 1% 5% 1%;
+	background-color: #3a57af;
+	padding: 1%;
+	color: white;
+	width: fit-content;
+	border-radius: 10%;
+	box-shadow: 0 0.19rem rgb(84 115 208 / 75%);
+	position: relative;
+	transition: all 0.1s linear 0s;
+	border-color: transparent;
+}
+
+button:hover {
+	top: 0.75%;
+	background-color: #2e458b;
+	box-shadow: none;
+	cursor: pointer;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+   opacity: 1;
 }

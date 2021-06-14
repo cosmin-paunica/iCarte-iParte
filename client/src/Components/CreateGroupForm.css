@@ -1,0 +1,45 @@
+.createGroupForm {
+	padding: 80px 50px;
+	background-color: rgba(0,0,0,.5411764705882353);
+}
+
+.createGroupForm>* {
+	display: block;
+	margin: 5px auto;
+	width: 500px;
+}
+
+.createGroupForm>h2 {
+	color: rgb(224, 224, 224)
+}
+
+.createGroupForm>input,.createGroupForm>textarea {
+	background-color: black;
+	opacity: 0.7;
+}
+
+.createGroupForm>textarea {
+	color: white;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.createGroupForm>button {
+	margin: 1px auto;
+    background-color: #3a57af;
+    padding: 1.75%;
+    color: #fff;
+    display: block;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    border-radius: 10%;
+    box-shadow: 0 0.19rem rgb(84 115 208 / 75%);
+    position: relative;
+    transition: all .1s linear 0s;
+}
+
+.createGroupForm>button:hover {
+	background-color: #2e458b;
+	box-shadow: none;
+}
