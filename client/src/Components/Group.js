@@ -5,9 +5,10 @@ const Group = (props) => {
 
 	const [group,setGroup] = useState(null)
 	const [posts,setPosts] = useState(null)
+	const [members,setMembers] = useState([])
 	const {id} = props.match.params
 
-	useEffect(()=>{
+	useEffect(async ()=>{
 		// will make call to API but we will hardcode this for now
 		fetch(`/api/group/${id}`, {
 			 "method":"GET",
@@ -33,7 +34,9 @@ const Group = (props) => {
 						console.log(`AICI ESTE RASPUNSUL ${response}`)
 						setPosts(response)
 					})
-		
+		let usersData = await fetch(`/api/group/${id}/users`)
+		usersData = await usersData.json()
+		setMembers(usersData)
 	},[])
 
 	if(group === null || posts === null) {
@@ -46,6 +49,14 @@ const Group = (props) => {
 		<div className ="groupProfile">
 			<h1> {group.name} </h1>
 			<p> {group.description} </p>
+			<h3>Membrii</h3>
+			<div className="members-list">
+				<ul>
+				{
+					members.map(member => <li>{member.username}</li>)
+				}
+				</ul>
+			</div>
 			{
 				posts.map(p => (
 					<div className = "post">
