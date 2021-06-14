@@ -1,6 +1,7 @@
 .friendList {
 	background-color: #0000008a;;
 	padding-top: 50px;
+	overflow-y: scroll;
 }
 
 .friendList h2 {

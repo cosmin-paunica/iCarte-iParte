@@ -8,8 +8,34 @@
 }
 
 form>input[type=number] {
-	background-color: black;
+	background-color: #00000094;
+	display: block;
+	margin: 0px auto;
 }
+
 form>input[type=submit] {
-	border: 1px solid black;
+	display: block;
+	margin: 0px auto;
+	background-color: #3a57af;
+	padding: 1%;
+	color: white;
+	width: fit-content;
+	border-radius: 10%;
+	box-shadow: 0 0.19rem rgb(84 115 208 / 75%);
+	position: relative;
+	transition: all 0.1s linear 0s;
+	border-color: transparent;
+}
+
+form>textarea {
+	display: block;
+	margin: 0px auto;
+}
+
+
+form>input[type=submit]:hover {
+	top: 0.75%;
+	background-color: #2e458b;
+	box-shadow: none;
+	cursor: pointer;
 }

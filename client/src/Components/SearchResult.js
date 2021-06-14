@@ -67,8 +67,8 @@ const SearchResult = (props) => {
 					bookResults.map(book => (
 							<div className ="bookSearchResult">
 								<Link to={`/book/${book.id}`}>
-									<img src = {book.volumeInfo.imageLinks.smallThumbnail} />
 									<h1> {book.volumeInfo.title} </h1>
+									<img src = {book.volumeInfo.imageLinks.smallThumbnail} />
 								</Link>
 
 							</div>
