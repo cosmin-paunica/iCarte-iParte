@@ -25,17 +25,18 @@ form>input[type=submit] {
 	position: relative;
 	transition: all 0.1s linear 0s;
 	border-color: transparent;
-}
+	font: 400 13.3333px Arial;
 
-form>textarea {
-	display: block;
-	margin: 0px auto;
 }
-
 
 form>input[type=submit]:hover {
 	top: 0.75%;
 	background-color: #2e458b;
 	box-shadow: none;
 	cursor: pointer;
+}
+
+form>textarea {
+	display: block;
+	margin: 0px auto;
 }
