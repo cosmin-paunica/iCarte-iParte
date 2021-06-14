@@ -75,7 +75,8 @@ const Book = (props) => {
 					<input type="submit" value="Adauga review" />
 				</form>
 				<ul>
-					{reviews.map(review=><li>{review.rating} | {review.comment}</li>)}
+					{/* {reviews.map(review=><li>{review.rating} | {review.comment}</li>)} */}
+					{reviews.map(review=><li>{review.rating} {review.comment ? ' | ': ''} {review.comment}</li>)}
 				</ul>
 			</div>
 		)
