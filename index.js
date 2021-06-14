@@ -137,9 +137,8 @@ app.get('/api/groups',async(req,res)=>{
 app.post('/api/groups',jsonParser,async(req,res)=>{
 	const groupName = req.body.name;
 	const groupDescription = req.body.description;
-	// const idAdmin = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
+	const idAdmin = await db.query(`SELECT "ID_user" FROM users WHERE username = $1`,[req.session.username]);
 	//TODO get id from req
-	const idAdmin =  1;
 
 	try{
 		const resQuery = await db.query(`INSERT INTO groups(name,description,"ID_Admin") VALUES ($1,$2,$3)`,[groupName,groupDescription,idAdmin]);
@@ -566,6 +565,7 @@ app.get("/api/following",async(req,res)=>{
 	res.status(200).json(data.rows);
 
 })
+
 /**
  * Returns a list of all the posts that have been made in a group
  */
@@ -579,7 +579,9 @@ app.get("/api/group_posts/:groupID", async(req, res) => {
 /**
  * Adds a group post in the db
  */
-app.post("/api/group_posts",async(req,res)=>{
+
+app.post("/api/group_posts",jsonParser,async(req,res)=>{
+
 	const ID_group = req.body.ID_group;
 	const post_text = req.body.post_text;
 	let loggedInUserID = await db.query("SELECT * FROM users WHERE username LIKE $1",[req.session.username]);
@@ -589,6 +591,7 @@ app.post("/api/group_posts",async(req,res)=>{
 	}else{
 		loggedInUserID = loggedInUserID.rows[0].ID_user;
 	}
+
 	try{
 		const resQuery = db.query(`INSERT INTO posts("ID_user","ID_group","post_text") VALUES ($1,$2,$3)`,[loggedInUserID,ID_group,post_text])
 		res.status(200).json({message:"Post added"});
@@ -731,6 +734,7 @@ app.delete("/api/comments",async(req,res)=>{
 		res.sendStatus(500)
 	}
 })
+
 
 app.get('/*', (req,res)=>{
 	res.sendFile(path.join(__dirname+'/client/build/index.html'))

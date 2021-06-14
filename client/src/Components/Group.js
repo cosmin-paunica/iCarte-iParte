@@ -4,9 +4,37 @@ import React, {useEffect,useState} from 'react'
 const Group = (props) => {
 
 	const [group,setGroup] = useState(null)
+  const [members,setMembers] = useState([])
+
+
 	const [posts,setPosts] = useState(null)
-	const [members,setMembers] = useState([])
+	const [newPost, setNewPost] = useState(null)
+
 	const {id} = props.match.params
+
+	const handlePostChange = (e) => {
+		setNewPost(e.target.value)
+	}
+
+	const sendPost = (e) => {
+		fetch(`/api/group_posts`,{
+			method:"POST",
+			headers: {
+				"Content-Type":"application/json"
+			},
+			body:JSON.stringify({
+				
+				ID_group:id,
+				post_text: newPost
+			})
+
+		}).then(res=>{
+			
+			console.log(res.json())
+				
+		})
+	}
+
 
 	useEffect(async ()=>{
 		// will make call to API but we will hardcode this for now
@@ -49,6 +77,13 @@ const Group = (props) => {
 		<div className ="groupProfile">
 			<h1> {group.name} </h1>
 			<p> {group.description} </p>
+
+
+			<h2> Complete the form below to post something here ! </h2>
+			<input type="text" placeholder = "Write something nice !" onChange ={handlePostChange}/>
+			<button onClick = {sendPost}> Post ! </button>
+			
+
 			<h3>Membrii</h3>
 			<div className="members-list">
 				<ul>
@@ -61,11 +96,13 @@ const Group = (props) => {
 				posts.map(p => (
 					<div className = "post">
 						<h2> {p.ID_user} </h2>
+
 						<p> {p.post_timestamp} </p>
 						<p> {p.post_text} </p>
 					</div>
 				))
 			}
+
 		</div>
 	)
 
