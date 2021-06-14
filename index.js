@@ -185,12 +185,9 @@ app.get('/api/group/:groupID/users',async(req,res)=>{
 		return res.status(500).json({message:"Not a group with that ID"});
 	}
 	try{
-		const users = await db.query(`SELECT "ID_user" FROM users_group WHERE "ID_group" = $1`,[req.params["groupID"]]);
-		let arrOfUsers = [];
-		users.rows.forEach((el)=>{
-			arrOfUsers.push(parseInt(el.ID_user));
-		})
-		res.status(200).json(arrOfUsers);
+		const users = await db.query(`SELECT "ID_user","username" FROM users_group JOIN "public"."users" USING("ID_user") WHERE "ID_group" = $1`,[req.params["groupID"]]);
+
+		res.status(200).json(users.rows);
 
 	}catch(err){
 		console.log(err.stack);
@@ -274,7 +271,7 @@ app.get("/api/reviews/:reviewID",async(req,res)=>{
  * Returns tha reviews for a single book
  */
 app.get("/api/reviews/book/:bookID",async(req,res)=>{
-	const data = await db.query(`SELECT * FROM reviews WHERE "ID_carte" = $1`,[req.params["bookID"]]);
+	const data = await db.query(`SELECT * FROM reviews JOIN "public"."users" USING ("ID_user") WHERE "ID_carte" = $1`,[req.params["bookID"]]);
 	res.status(200).json(data.rows);
 })
 
@@ -450,6 +447,18 @@ app.get("/api/getReadingList/",async(req,res)=>{
 
 	
 	res.status(200).json(rows);
+})
+
+app.get("/api/getReadingList/:userID",async(req,res)=>{
+	let data = await db.query(`SELECT * FROM "books_read" WHERE "ID_user" = $1`,[req.params["userID"]])
+	let rows = await Promise.all(data.rows.map(async(e)=>{
+		let book_info = (await books.volumes.get({volumeId:e.ID_book})).data;
+		e.title =  book_info.volumeInfo.title;
+		e.thumbnail =  book_info.volumeInfo.imageLinks.thumbnail
+		return e
+	})) 
+
+	res.status(200).json(rows)
 })
 
 /**
