@@ -1,3 +1,17 @@
 .userProfile {
 	padding-top:50px;
+	background-color: #0000008a;;
+	padding-top: 50px;
+	overflow-y: scroll;
+	color: white;
+	text-align: center;
+}
+
+.userProfile a {
+	text-decoration: none;
+}
+
+.userProfile a:active, .userProfile a:hover, .userProfile a:link, .userProfile a:visited {
+	outline-width: 0;
+	color: white;
 }
