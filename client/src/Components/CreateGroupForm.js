@@ -39,8 +39,9 @@ const CreateGroupForm = (props) => {
 
 	return(
 		<div className = "createGroupForm">
+			<h2>Crează un grup</h2>
 			<input type="text" placeholder ="Name of the group" onChange = {handleChange1}/>
-			<input type = "text" placeholder = "Group description" onChange = {handleChange2} />
+			<textarea rows="4" cols="50" placeholder = "Group description" onChange = {handleChange2}></textarea>
 			<button onClick = {handleClick}> Create group </button>
 		</div>
 	)
