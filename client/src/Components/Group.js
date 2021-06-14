@@ -95,8 +95,7 @@ const Group = (props) => {
 			{
 				posts.map(p => (
 					<div className = "post">
-						<h2> {p.ID_user} </h2>
-
+						<h2> {p.username} </h2>
 						<p> {p.post_timestamp} </p>
 						<p> {p.post_text} </p>
 					</div>
