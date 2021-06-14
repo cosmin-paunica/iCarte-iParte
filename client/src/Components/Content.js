@@ -4,8 +4,10 @@ import Feed from './Feed.js'
 import SideContent from './SideContent.js'
 import Book from './Book.js'
 import SearchResult from './SearchResult.js'
+
 import NavBar from './NavBar.js'
 import React, {useEffect,useState} from 'react'
+
 import UserProfile from './UserProfile.js'
 import Group from './Group.js'
 import CreateGroupForm from './CreateGroupForm.js'

@@ -18,7 +18,7 @@ const SideContent = (props) => {
 	}
 	return(
 		<div className="sidecontent">
-			<h3>My Books</h3>
+			<h2>My Books</h2>
 			<div className="book-container">
 			{
 				books.map(book=> {
