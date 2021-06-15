@@ -16,11 +16,18 @@ La baza aplicației stă mediul de rulare Node.js, iar partea de front-end a fos
 
 ## Detalii de implementare
 
-### Baza de date
-![Diagrama bazei de date](/images/diagrama_bd.png "Diagrama bazei de date")
+### Build tool
+Ca build tool, am folosit utilitatile oferite de Github. Pentru Backlog am folosit pagina Projects, iar pentru bug reporting am folosit pagina Issues.
 
 ### Backlog
 ![Backlog](/images/backlog.png "Backlog")
+
+### Bug reporting
+![Open issues](/images/bugs_open.jpg "Open issues")
+![Closed issues](/images/bugs_closed.jpg "Closed issues")
+
+### Baza de date
+![Diagrama bazei de date](/images/diagrama_bd.png "Diagrama bazei de date")
 
 ### User stories
 - Ca dezvoltator, doresc sa stochez date despre utilizatori in urmatoarele tabele:
@@ -30,10 +37,6 @@ La baza aplicației stă mediul de rulare Node.js, iar partea de front-end a fos
   - BOOKS_READ (id_user#, id_book#, start_date, finish_date)
   - FOLLOWAGE (id_user#, id_friend#, pending, accept_date)
   - USERS_GROUP (id_user#, id_group#)
-
-### Bug reporting
-![Open issues](/images/bugs_open.jpg "Open issues")
-![Closed issues](/images/bugs_closed.jpg "Closed issues")
 
 - Ca dezvoltator, doresc sa implementez baza de date in cloud (folosind elephant sql)
 
