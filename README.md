@@ -1,6 +1,28 @@
+
 # iCarte-iParte
 
-## User stories
+## Membri echipei
+- [Cosmin Horjea](https://github.com/CosminHorjea)
+- [Rareș Băeșu](https://github.com/raresGabriel01)
+- [Daniel Vlascenco](https://github.com/VLCDaniel)
+- [Petrescu Cosmin](https://github.com/cosminbvb)
+- [Păunică Cosmin](https://github.com/cosmin-paunica)
+
+## Descrierea proiectului
+Proiectul este o aplicație web, construită pentru iubitorii de cărți, unde aceștia pot căuta cărți pe care le pot marca în categoriile "citite" sau "în curs de citire", se pot înscrie în grupuri de discuție pe anumite teme sau să-și facă prieteni.
+
+La baza aplicației stă mediul de rulare Node.js, iar partea de front-end a fost realizată cu React. Informațiile despre cărți sunt obținute prin intermediul Google Books API, iar o bază de date PostgreSQL stochează date despre utilizatori, grupuri, postări, relații de prietenie etc.
+
+
+## Detalii de implementare
+
+### Baza de date
+![Diagrama bazei de date](/images/diagrama_bd.png "Diagrama bazei de date")
+
+### Backlog
+![Backlog](/images/backlog.png "Backlog")
+
+### User stories
 - Ca dezvoltator, doresc sa stochez date despre utilizatori in urmatoarele tabele:
   - USERS (id_user#, email, username, password)
   - GROUPS (id_group#, name, description, id_admin)
@@ -47,3 +69,9 @@ un config file pentru conectivitatea la baza de date, diverse fisiere javascript
 - Ca utilizator, vreau să pot marca unele cărți în una dintre următoarele categorii: citite, în curs de citire, de citit in urma apasarii unui buton de pe pagina specifica unui titlu.
 
 - Ca dezvoltator, doresc să pot oferi aplicația spre a putea fi folosită de oricine are acces la internet (vom utiliza serviciul de hostare oferit de www.heroku.com)
+
+## Imagini
+![Pagina de login](/images/print_1.png "Pagina de login")
+![Pagina principala](/images/print_2.png "Pagina principala")
+![Pagina unei cărți](/images/print_3.png "Pagina unei cărți")
+![Pagina unui grup](/images/print_4.png "Pagina unui grup")
