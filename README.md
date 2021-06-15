@@ -82,3 +82,5 @@ un config file pentru conectivitatea la baza de date, diverse fisiere javascript
 ![Pagina principala](/images/print_2.png "Pagina principala")
 ![Pagina unei cărți](/images/print_3.png "Pagina unei cărți")
 ![Pagina unui grup](/images/print_4.png "Pagina unui grup")
+
+## [Demo](https://youtu.be/9THQCiWEERk) 
