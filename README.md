@@ -32,8 +32,8 @@ La baza aplicației stă mediul de rulare Node.js, iar partea de front-end a fos
   - USERS_GROUP (id_user#, id_group#)
 
 ### Bug reporting
-![Open issues](/images/bugs_open.png "Open issues")
-![Closed issues](/images/bugs_closed.png "Closed issues")
+![Open issues](/images/bugs_open.jpg "Open issues")
+![Closed issues](/images/bugs_closed.jpg "Closed issues")
 
 - Ca dezvoltator, doresc sa implementez baza de date in cloud (folosind elephant sql)
 
