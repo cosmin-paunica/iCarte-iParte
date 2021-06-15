@@ -31,6 +31,10 @@ La baza aplicației stă mediul de rulare Node.js, iar partea de front-end a fos
   - FOLLOWAGE (id_user#, id_friend#, pending, accept_date)
   - USERS_GROUP (id_user#, id_group#)
 
+### Bug reporting
+![Open issues](/images/bugs_open.png "Open issues")
+![Closed issues](/images/bugs_closed.png "Closed issues")
+
 - Ca dezvoltator, doresc sa implementez baza de date in cloud (folosind elephant sql)
 
 - Ca dezvoltator, doresc sa am o structura de baza a serverului implementata. Aceasta va contine: end-point-urile API-ului care va intoarce informatii de la baza de date,
