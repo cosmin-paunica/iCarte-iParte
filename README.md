@@ -1,7 +1,7 @@
 
 # iCarte-iParte
 
-## Membri echipei
+## Membrii echipei
 - [Cosmin Horjea](https://github.com/CosminHorjea)
 - [Rareș Băeșu](https://github.com/raresGabriel01)
 - [Daniel Vlascenco](https://github.com/VLCDaniel)
